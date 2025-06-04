@@ -1,5 +1,11 @@
+import { Map } from 'widgets';
+
 function App() {
-  return <h1 className="text-3xl font-bold underline">Hello world of food!</h1>;
+  return (
+    <div className="h-screen w-screen">
+      <Map />
+    </div>
+  );
 }
 
 export default App;
