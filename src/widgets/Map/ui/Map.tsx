@@ -1,19 +1,21 @@
 import { useRef, useEffect, useState } from 'react';
-import { Geocoder } from '@mapbox/search-js-react';
+import { Geocoder, useSearchBoxCore } from '@mapbox/search-js-react';
 import mapboxgl, { Map as MapType } from 'mapbox-gl';
+import { env } from 'app/config';
 import 'mapbox-gl/dist/mapbox-gl.css';
-
-const accessToken =
-  'pk.eyJ1IjoiZG9hbnRvbmkiLCJhIjoiY2txczU1dTA0MTdsbzJucWF5ejVvemFrayJ9.cOgJkwB5_agmOIinEoruDA';
 
 export const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<MapType | undefined>(undefined);
+  const searchBoxCore = useSearchBoxCore({
+    accessToken: env.mapbox.accessToken,
+  });
   const [, setMapLoaded] = useState(false);
   const [inputValue, setInputValue] = useState('');
   useEffect(() => {
-    mapboxgl.accessToken = accessToken;
+    mapboxgl.accessToken = env.mapbox.accessToken;
     if (!mapContainerRef.current) return;
+
     mapInstanceRef.current = new mapboxgl.Map({
       container: mapContainerRef.current, // container ID
       center: [-74.5, 40], // starting position [lng, lat]
@@ -29,11 +31,15 @@ export const Map = () => {
     <>
       {/* @ts-expect-error mapbox typescript bug */}
       <Geocoder
-        accessToken={accessToken}
-        onRetrieve={(e) => {
+        accessToken={env.mapbox.accessToken}
+        onRetrieve={async (e) => {
+          console.log('Retrieved: ', e);
+
           const map = mapInstanceRef.current;
-          const bbox = e.properties.bbox as number[];
+          const bbox = e.properties.bbox as [number, number, number, number];
           if (!bbox || !map) return;
+          map.removeLayer('bbox');
+          map.removeLayer('points');
           const bboxJson = {
             type: 'Polygon',
             coordinates: [
@@ -66,7 +72,39 @@ export const Map = () => {
               'fill-opacity': 0.25,
             },
           });
-          console.log('Retrieved: ', e);
+          const restaurants = await searchBoxCore.category('food_and_drink', {
+            bbox,
+            limit: 25,
+            /*  proximity: e.geometry.coordinates as [number, number], */
+          });
+          console.log('Restaurants: ', restaurants);
+
+          map.addSource('points', {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: restaurants.features,
+            },
+          });
+
+          // Apply 'within' expression to points
+          // Routes within Colorado have 'circle-color': '#f55442'
+          // Fallback values (routes not within Colorado) have 'circle-color': '#484848'
+          map.addLayer({
+            id: 'points',
+            type: 'circle',
+            source: 'points',
+            layout: {},
+            paint: {
+              'circle-color': [
+                'case',
+                ['within', bboxJson],
+                '#f55442',
+                '#484848',
+              ],
+              'circle-radius': 10,
+            },
+          });
         }}
         map={mapInstanceRef.current}
         mapboxgl={mapboxgl}
