@@ -4,6 +4,7 @@ import mapboxgl, { Map as MapType } from 'mapbox-gl';
 import { env } from 'app/config';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useRestaurantsSearch } from 'features/restaurants';
+import './styles.css';
 
 export const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -36,32 +37,33 @@ export const Map = () => {
         map,
         coordinates: { lat: e.lngLat.lat, lng: e.lngLat.lng },
       });
-      console.log('clicked on map: ', e);
     });
   }, []);
 
   return (
     <>
-      {/* @ts-expect-error mapbox typescript bug */}
-      <Geocoder
-        accessToken={env.mapbox.accessToken}
-        onRetrieve={async (e) => {
-          const map = mapInstanceRef.current;
-          if (!map) return;
-          const { latitude, longitude } = e.properties.coordinates;
-          displayNearbyRestaurants({
-            map,
-            coordinates: { lat: latitude, lng: longitude },
-          });
-        }}
-        map={mapInstanceRef.current}
-        mapboxgl={mapboxgl}
-        value={inputValue}
-        onChange={(d) => {
-          setInputValue(d);
-        }}
-        marker
-      />
+      <div className="absolute top-10 w-full h-full z-1 flex justify-center items-baseline pointer-events-none">
+        {/* @ts-expect-error mapbox typescript bug */}
+        <Geocoder
+          accessToken={env.mapbox.accessToken}
+          onRetrieve={async (e) => {
+            const map = mapInstanceRef.current;
+            if (!map) return;
+            const { latitude, longitude } = e.properties.coordinates;
+            displayNearbyRestaurants({
+              map,
+              coordinates: { lat: latitude, lng: longitude },
+            });
+          }}
+          map={mapInstanceRef.current}
+          mapboxgl={mapboxgl}
+          value={inputValue}
+          onChange={(d) => {
+            setInputValue(d);
+          }}
+        />
+      </div>
+
       <div id="map-container" ref={mapContainerRef} className="w-full h-full" />
     </>
   );
