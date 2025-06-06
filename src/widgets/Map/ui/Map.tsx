@@ -23,11 +23,19 @@ export const Map = () => {
       center: [15.994705, 45.750367],
       zoom: 15,
     });
-
+    const map = mapInstanceRef.current;
+    if (!map) return;
     mapInstanceRef.current.on('load', () => {
       setMapLoaded(true);
     });
     mapInstanceRef.current?.on('click', (e) => {
+      mapInstanceRef.current?.flyTo({
+        center: e.lngLat,
+      });
+      displayNearbyRestaurants({
+        map,
+        coordinates: { lat: e.lngLat.lat, lng: e.lngLat.lng },
+      });
       console.log('clicked on map: ', e);
     });
   }, []);

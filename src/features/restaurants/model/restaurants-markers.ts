@@ -1,10 +1,17 @@
 import type { Restaurant, RestaurantMakis } from 'entities/restaurant';
 import { getImageUrl } from './restaurants.icons';
 
-import mapboxgl, { Map } from 'mapbox-gl';
+import mapboxgl, { Map, Marker } from 'mapbox-gl';
+
+const existingMarkers: Marker[] = [];
 
 export const useRestaurantsMarkers = () => {
   const drawRestaurantMarkers = async (map: Map, restaurants: Restaurant[]) => {
+    existingMarkers.forEach((marker) => {
+      marker.remove();
+    });
+
+    existingMarkers.length = 0;
     // Add markers to the map.
     for (const restaurant of restaurants) {
       const maki = restaurant.maki as RestaurantMakis;
@@ -23,9 +30,10 @@ export const useRestaurantsMarkers = () => {
       });
 
       // Add markers to the map.
-      new mapboxgl.Marker(el)
+      const marker = new mapboxgl.Marker(el)
         .setLngLat(restaurant.coordinates as [number, number])
         .addTo(map);
+      existingMarkers.push(marker);
     }
   };
 
