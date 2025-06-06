@@ -1,5 +1,5 @@
 import type { Restaurant, RestaurantMakis } from 'entities/restaurant';
-import { restaurantIcons } from './restaurants.icons';
+import { getImageUrl } from './restaurants.icons';
 
 import mapboxgl, { Map } from 'mapbox-gl';
 
@@ -13,7 +13,7 @@ export const useRestaurantsMarkers = () => {
       const width = 30;
       const height = 30;
       el.className = 'marker';
-      el.style.backgroundImage = `url(${restaurantIcons[maki]})`;
+      el.style.backgroundImage = `url(${getImageUrl(restaurant.name, maki)})`;
       el.style.width = `${width}px`;
       el.style.height = `${height}px`;
       el.style.backgroundSize = '100%';

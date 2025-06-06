@@ -7,6 +7,7 @@ export enum RestaurantMakis {
 }
 
 export type Restaurant = {
+  id: string | number;
   maki: RestaurantMakis;
   name: string;
   coordinates: [number, number];
