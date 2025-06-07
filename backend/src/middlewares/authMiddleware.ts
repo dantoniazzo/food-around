@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import {
   ExpressMiddlewareInterface,
-  UnauthorizedError,
+  UnauthorizedError
 } from 'routing-controllers';
 import { Service, Inject } from 'typedi';
 import jwt, { JwtPayload } from 'jsonwebtoken';
@@ -19,7 +19,11 @@ export class AuthMiddleware implements ExpressMiddlewareInterface {
   constructor(
     @Inject('userModel') private userModel: Model<UserDocument & Document>
   ) {}
-  public async use(req: Request, res: Response, next: NextFunction) {
+  public async use(
+    req: Request & { id: string },
+    res: Response,
+    next: NextFunction
+  ) {
     let token;
 
     if (req.cookies.token) {
@@ -42,7 +46,7 @@ export class AuthMiddleware implements ExpressMiddlewareInterface {
         throw new Error('User not found');
       }
 
-      req.user = foundUser._id;
+      req.id = foundUser._id as string;
     } catch (err) {
       return next(new UnauthorizedError('Not authorized'));
     }
