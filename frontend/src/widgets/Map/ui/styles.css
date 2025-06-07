@@ -15,6 +15,7 @@ mapbox-geocoder input {
 }
 
 mapbox-search-listbox > div > div {
+  pointer-events: auto;
   background: transparent !important;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
