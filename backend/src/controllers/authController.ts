@@ -8,7 +8,7 @@ import {
   Param,
   Get,
   Res,
-  Put,
+  Put
 } from 'routing-controllers';
 import { UserLoginDto } from '../dto/user';
 import { UserDto } from '../dto/user';
@@ -40,13 +40,13 @@ export class AuthController {
     @QueryParam('token') token: string
   ) {
     try {
-      const user: UserDto = await this.authService.verify(token);
+      const user = await this.authService.verify(token);
       response
-        .cookie('token', user.data.attributes.token, {
+        .cookie('token', user.token, {
           expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
           httpOnly: true,
           sameSite: 'none',
-          secure: true,
+          secure: true
         })
         .redirect(`${env.frontend.url}/dashboard`);
     } catch (err) {
@@ -91,16 +91,16 @@ export class AuthController {
     @Res() response: Response,
     @Body() resetBody: UserLoginDto
   ) {
-    const user: UserDto = await this.authService.resetPassword(
+    const user = await this.authService.resetPassword(
       resetBody.data.attributes.email,
       resetBody.data.attributes.password
     );
     return response
-      .cookie('token', user.data.attributes.token, {
+      .cookie('token', user.token, {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         httpOnly: true,
         sameSite: 'none',
-        secure: true,
+        secure: true
       })
       .json(user);
   }
@@ -109,13 +109,13 @@ export class AuthController {
   @HttpCode(200)
   @ResponseSchema(UserDto)
   public async login(@Res() response: Response, @Body() body: UserLoginDto) {
-    const user: UserDto = await this.authService.login(body.data.attributes);
+    const user = await this.authService.login(body.data.attributes);
     return response
-      .cookie('token', user.data.attributes.token, {
+      .cookie('token', user.token, {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         httpOnly: true,
         sameSite: 'none',
-        secure: true,
+        secure: true
       })
       .json(user);
   }
@@ -125,7 +125,7 @@ export class AuthController {
   public logout(@Res() response: Response) {
     response.cookie('token', 'none', {
       expires: new Date(Date.now() + 10 * 1000),
-      httpOnly: true,
+      httpOnly: true
     });
   }
 }

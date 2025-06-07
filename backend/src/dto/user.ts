@@ -5,7 +5,7 @@ import {
   MaxLength,
   ValidateNested,
   IsString,
-  IsOptional,
+  IsOptional
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Identifier } from './index';
@@ -14,18 +14,18 @@ import { UserLogin } from '../interfaces/user';
 class UserLoginAttributes implements UserLogin {
   @IsOptional()
   @IsEmail(undefined, {
-    message: 'Please add a valid email',
+    message: 'Please add a valid email'
   })
   email: string;
 
   @IsOptional()
   @MinLength(3, {
-    message: 'Minimum nickname length is 3 characters',
+    message: 'Minimum name length is 3 characters'
   })
   @MaxLength(15, {
-    message: 'Maximum nickname length is 15 characters',
+    message: 'Maximum name length is 15 characters'
   })
-  nickname: string;
+  name: string;
 
   @IsNotEmpty()
   @IsString()
