@@ -11,12 +11,11 @@ import {
   UseAfter,
   Req,
   Res,
-  UseBefore,
+  UseBefore
 } from 'routing-controllers';
 import { UserDto } from '../dto/user';
 import { ErrorHandlerMiddleware } from '../middlewares/errorMiddleware';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
-import { Request } from 'express';
 import { AuthMiddleware } from '../middlewares/authMiddleware';
 
 @JsonController('/user')
@@ -30,20 +29,20 @@ export class UserController {
   @Get()
   @HttpCode(200)
   @ResponseSchema(UserDto)
-  public get(@Req() request: Request) {
-    return this.userService.read(request.user);
+  public get(@Req() request: { id: string }) {
+    return this.userService.read(request.id);
   }
 
   @Put()
   @HttpCode(201)
   @ResponseSchema(UserDto)
-  public put(@Req() request: Request, @Body() body: UserDto) {
-    return this.userService.update(request.user, body.data.attributes);
+  public put(@Req() request: { id: string }, @Body() body: UserDto) {
+    return this.userService.update(request.id, body.data.attributes);
   }
 
   @Delete()
   @HttpCode(200)
-  public delete(@Req() request: Request) {
-    return this.userService.delete(request.user);
+  public delete(@Req() request: { id: string }) {
+    return this.userService.delete(request.id);
   }
 }
