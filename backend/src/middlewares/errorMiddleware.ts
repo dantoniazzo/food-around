@@ -3,9 +3,10 @@ import {
   ExpressErrorMiddlewareInterface,
   HttpError,
 } from 'routing-controllers';
-import { Logger } from '../utils/logger';
+
 import { Service } from 'typedi';
 import util from 'util';
+import { Logger } from '../utils/logger';
 
 @Service()
 export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {

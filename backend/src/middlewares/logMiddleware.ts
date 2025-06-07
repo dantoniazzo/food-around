@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { ExpressMiddlewareInterface, Middleware } from 'routing-controllers';
-import { Logger } from '../utils/logger';
+
 import morgan, { StreamOptions } from 'morgan';
 import { Service } from 'typedi';
+import { Logger } from '../utils/logger';
 
 // Override the stream method by telling
 // Morgan to use our custom logger instead of the console.log.
