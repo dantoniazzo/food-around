@@ -1,17 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import {
   ExpressErrorMiddlewareInterface,
-  HttpError,
+  HttpError
 } from 'routing-controllers';
 
 import { Service } from 'typedi';
 import util from 'util';
-import { Logger } from '../utils/logger';
 
 @Service()
 export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
   public error(error: any, req: Request, res: Response): void {
-    Logger.error(util.inspect(error));
+    console.error(util.inspect(error));
 
     const errorName = error.name;
 
@@ -61,7 +60,7 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
     res.status(error.httpCode || 500).json({
       code: <string>error.httpCode || '500',
       title: errorName || undefined,
-      detail: error.message || undefined,
+      detail: error.message || undefined
     });
   }
 }

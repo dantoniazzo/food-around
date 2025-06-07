@@ -8,7 +8,6 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { env } from '../config/env';
 import { Document, Model } from 'mongoose';
 import { UserDocument } from '../models/userModel';
-import { Logger } from '../utils/logger';
 
 interface JwtPayloadId extends JwtPayload {
   id?: any;
@@ -42,7 +41,7 @@ export class AuthMiddleware implements ExpressMiddlewareInterface {
       //req.user = decoded.id;
       const foundUser = await this.userModel.findById(decoded.id);
       if (!foundUser) {
-        Logger.debug('User not found');
+        console.debug('User not found');
         throw new Error('User not found');
       }
 
