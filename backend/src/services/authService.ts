@@ -5,7 +5,6 @@ import { Inject, Service } from 'typedi';
 import { env } from '../config/env';
 import { User, UserLogin } from '../interfaces/user';
 import { UserDocument } from '../models/userModel';
-import { sendEmail } from '../utils/email';
 
 @Service()
 export class AuthService {
@@ -18,14 +17,6 @@ export class AuthService {
     const confirmEmailToken = data.generateEmailConfirmToken();
     const confirmEmailURL = `${env.app.host}/${env.app.routePrefix}/auth/verify/email?token=${confirmEmailToken}`;
     data.save({ validateBeforeSave: false });
-
-    await sendEmail({
-      email: data.email as string,
-      btnText: 'Confirm email',
-      btnUrl: confirmEmailURL,
-      body: 'You are receiving this email because you need to confirm your email address.',
-      subject: 'Email Confirmation',
-    });
   }
 
   public async verify(token: string) {
@@ -71,14 +62,6 @@ export class AuthService {
     const confirmEmailToken = user.generateEmailConfirmToken();
     const confirmEmailURL = `${env.app.host}/${env.app.routePrefix}/auth/verify/email?token=${confirmEmailToken}`;
     await user.save({ validateBeforeSave: false });
-
-    await sendEmail({
-      email: email,
-      btnText: 'Confirm email',
-      btnUrl: confirmEmailURL,
-      body: 'You are receiving this email because you need to confirm your email address.',
-      subject: 'Email Confirmation',
-    });
   }
 
   public async forgotPassword(email: string) {
@@ -93,14 +76,6 @@ export class AuthService {
     if (user.resetPasswordConfirmed) user.resetPasswordConfirmed = false;
     await user.save({ validateBeforeSave: false });
     const resetPasswordUrl = `${env.app.host}/${env.app.routePrefix}/auth/verify/password?token=${resetToken}`;
-
-    await sendEmail({
-      email: email,
-      subject: 'Reset Password Confirmation',
-      btnText: 'Reset Password',
-      btnUrl: resetPasswordUrl,
-      body: 'You are receiving this email because you have request the reset of a password.',
-    });
   }
 
   public async verifyResetPasswordToken(token: string) {

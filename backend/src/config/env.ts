@@ -16,13 +16,4 @@ export const env = {
   frontend: {
     url: process.env.FRONTEND_URL,
   },
-  email: {
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-    secure: process.env.EMAIL_SECURE,
-    sendgrid_api_key: process.env.SENDGRID_API_KEY,
-    template_id: process.env.SENDGRID_TEMPLATE_ID,
-  },
 };
