@@ -34,8 +34,7 @@ export class UserService {
   public async update(id: string, user: User) {
     const data = await this.userModel
       .findByIdAndUpdate(id, user, {
-        new: true,
-        runValidators: true
+        new: true
       })
       .lean();
     return data;

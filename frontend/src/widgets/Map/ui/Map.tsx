@@ -20,11 +20,14 @@ import Button from '@mui/material/Button';
 import GradeIcon from '@mui/icons-material/Grade';
 
 import type { Restaurant } from 'entities/restaurant';
+import { userMutationApi } from 'features/user-mutation';
+import { useViewer } from 'entities/viewer';
 
 export const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<MapType | undefined>(undefined);
-
+  const { getMe } = useViewer();
+  const [handleUpdateUser] = userMutationApi.endpoints.updateUser.useMutation();
   const { displayNearbyRestaurants } = useRestaurantsSearch();
   const [, setMapLoaded] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] =
@@ -101,7 +104,38 @@ export const Map = () => {
       <Dialog onClose={handleClose} open={!!selectedRestaurant}>
         <DialogTitle textAlign={'center'} fontSize={24}>
           {selectedRestaurant?.name}
-          <div className="absolute top-6 right-5">
+          <div
+            className="absolute top-6 right-5 cursor-pointer"
+            onClick={() => {
+              const viewer = getMe();
+              console.log('Viewr: ', viewer);
+              if (!viewer || !selectedRestaurant) return;
+              const favorites = viewer.favorites;
+              let newFavorites = [];
+              if (!favorites) {
+                newFavorites.push(selectedRestaurant);
+              } else {
+                const existingRestaurant = favorites.find(
+                  (favorite) => favorite.id === selectedRestaurant.id
+                );
+                if (existingRestaurant) {
+                  newFavorites = favorites.filter(
+                    (favorite) => favorite.id !== selectedRestaurant.id
+                  );
+                } else {
+                  newFavorites = [...favorites, selectedRestaurant];
+                }
+              }
+              const updatedViewer = {
+                name: viewer.name,
+                id: viewer.id,
+                email: viewer.email,
+                favorites: newFavorites,
+              };
+
+              handleUpdateUser(updatedViewer);
+            }}
+          >
             <GradeIcon color="inherit" fontSize="large" />
           </div>
         </DialogTitle>

@@ -10,6 +10,7 @@ import {
 import { Type } from 'class-transformer';
 import { Identifier } from './index';
 import { UserLogin } from '../interfaces/user';
+import { Restaurant } from '../interfaces/restaurants';
 
 class UserLoginAttributes implements UserLogin {
   @IsOptional()
@@ -40,6 +41,7 @@ class UserLoginObject extends Identifier {
 
 class UserAttributes extends UserLoginAttributes {
   token?: string;
+  favorites?: Restaurant[];
 }
 
 class UserObject extends Identifier {
