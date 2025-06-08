@@ -123,7 +123,12 @@ export const Map = () => {
 
           {selectedRestaurant?.openHours?.map((openHours) => {
             return (
-              <DialogContentText fontSize={14}>
+              <DialogContentText
+                width={'fit-content'}
+                paddingTop={'4px'}
+                borderBottom={'1px solid rgba(186, 186, 186, 0.555)'}
+                fontSize={14}
+              >
                 {formatOpenHours(openHours)}
               </DialogContentText>
             );
@@ -131,7 +136,7 @@ export const Map = () => {
         </DialogContent>
         <DialogActions>
           <Button color="inherit" onClick={handleClose}>
-            Go to restaurant page
+            More details
           </Button>
         </DialogActions>
       </Dialog>
