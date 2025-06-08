@@ -1,6 +1,6 @@
 import { baseApi, TAGS } from 'app/redux';
 import type { IUser } from 'entities/user';
-import type { ISignUpData } from './auth.types';
+import type { ISignInData, ISignUpData } from './auth.types';
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -11,11 +11,23 @@ export const authApi = baseApi.injectEndpoints({
         body: {
           data: {
             attributes,
+            type: 'user',
           },
-          type: 'user',
         },
       }),
       invalidatesTags: [TAGS.AUTH, TAGS.USER],
+    }),
+    signin: build.mutation<IUser, ISignInData>({
+      query: (attributes) => ({
+        url: '/auth/login',
+        method: 'POST',
+        body: {
+          data: {
+            attributes,
+            type: 'user',
+          },
+        },
+      }),
     }),
   }),
 });
