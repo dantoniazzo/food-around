@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useMemo } from 'react';
 import { Geocoder } from '@mapbox/search-js-react';
 import mapboxgl, { Map as MapType } from 'mapbox-gl';
 import { env } from 'app/config';
@@ -19,10 +19,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import GradeIcon from '@mui/icons-material/Grade';
+import TextField from '@mui/material/TextField';
+import { debounce } from 'lodash';
 
 import type { Restaurant } from 'entities/restaurant';
 import { userMutationApi } from 'features/user-mutation';
 import { useViewer } from 'entities/viewer';
+import { getItem, LocalStorageKeys } from 'shared';
 
 export const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -80,6 +83,31 @@ export const Map = () => {
   const handleClose = () => {
     setSelectedRestaurant(null);
   };
+
+  const debounceCommentChange = useMemo(
+    () =>
+      debounce((value: string) => {
+        if (!me || !selectedRestaurant) return;
+        const favorites = me.favorites;
+        const updatedFavorites = favorites?.map((favorite) => {
+          if (favorite.id === selectedRestaurant.id) {
+            return { ...favorite, comment: value };
+          } else return favorite;
+        });
+        const updatedViewer = {
+          name: me.name,
+          email: me.email,
+          id: getItem(LocalStorageKeys.USER_ID) as string,
+          favorites: updatedFavorites,
+        };
+        handleUpdateUser(updatedViewer);
+      }, 300),
+    [me, handleUpdateUser, selectedRestaurant]
+  );
+
+  const selectedFavorite = me?.favorites?.find(
+    (favorite) => favorite.id === selectedRestaurant?.id
+  );
   return (
     <>
       <div className="absolute top-10 w-full h-full z-1 flex justify-center items-baseline pointer-events-none">
@@ -136,8 +164,8 @@ export const Map = () => {
               }
               const updatedViewer = {
                 name: viewer.name,
-                id: viewer.id,
                 email: viewer.email,
+                id: getItem(LocalStorageKeys.USER_ID) as string,
                 favorites: newFavorites,
               };
 
@@ -145,13 +173,7 @@ export const Map = () => {
             }}
           >
             <GradeIcon
-              color={
-                me?.favorites?.find(
-                  (favorite) => favorite.id === selectedRestaurant?.id
-                )
-                  ? 'warning'
-                  : 'inherit'
-              }
+              color={selectedFavorite ? 'warning' : 'inherit'}
               fontSize="large"
             />
           </div>
@@ -188,6 +210,18 @@ export const Map = () => {
               </DialogContentText>
             );
           })}
+          {selectedFavorite && (
+            <div className="mt-4">
+              <TextField
+                label="Comment"
+                type="text"
+                fullWidth
+                defaultValue={selectedFavorite.comment}
+                variant="standard"
+                onChange={(e) => debounceCommentChange(e.target.value)}
+              />
+            </div>
+          )}
         </DialogContent>
         <DialogActions>
           <Button color="inherit" onClick={handleClose}>

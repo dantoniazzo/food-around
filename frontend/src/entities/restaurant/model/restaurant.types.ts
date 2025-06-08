@@ -24,4 +24,5 @@ export type Restaurant = {
   address: string;
   openHours?: OpenHours[];
   phone: string;
+  comment?: string;
 };
