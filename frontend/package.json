@@ -15,9 +15,12 @@
     "@fontsource/roboto": "^5.2.6",
     "@mapbox/search-js-react": "^1.1.0",
     "@mui/material": "^7.1.1",
+    "@reduxjs/toolkit": "^2.8.2",
     "@tailwindcss/vite": "^4.1.8",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.6.2",
     "tailwindcss": "^4.1.8"
   },
   "devDependencies": {
