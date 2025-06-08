@@ -2,8 +2,6 @@ import { User } from '../interfaces/user';
 import { Inject, Service } from 'typedi';
 import { Document, Model } from 'mongoose';
 import { UserDocument } from '../models/userModel';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { env } from '../config/env';
 import { decodeJwt } from '../utils/jwt';
 @Service()
 export class UserService {

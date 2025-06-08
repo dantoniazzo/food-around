@@ -1,3 +1,5 @@
+import { Restaurant } from './restaurants';
+
 export interface UserLogin {
   name?: string;
   email?: string;
@@ -13,4 +15,5 @@ export interface User extends UserLogin {
   resetPasswordConfirmed?: boolean;
   photo?: string;
   createdAt?: Date;
+  favorites?: Array<Restaurant>;
 }

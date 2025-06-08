@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { User } from '../interfaces/user';
+import { Restaurant } from '../interfaces/restaurants';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
@@ -19,7 +20,7 @@ const UserSchema = new Schema<UserDocument>(
       required: [true, 'Please add your name'],
       minlength: 3,
       maxlength: 15,
-      unique: true,
+      unique: true
     },
     email: {
       type: String,
@@ -27,8 +28,8 @@ const UserSchema = new Schema<UserDocument>(
       unique: true,
       match: [
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        'Please add a valid email',
-      ],
+        'Please add a valid email'
+      ]
     },
     password: {
       type: String,
@@ -36,37 +37,38 @@ const UserSchema = new Schema<UserDocument>(
       select: false,
       match: [
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-        'Please add a valid password. Minimum length is 8 and it should include at least one special character, letter and number',
-      ],
+        'Please add a valid password. Minimum length is 8 and it should include at least one special character, letter and number'
+      ]
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
     resetPasswordConfirmed: {
       type: Boolean,
-      default: false,
+      default: false
     },
     confirmEmailToken: String,
     isEmailConfirmed: {
       type: Boolean,
-      default: false,
+      default: false
     },
     photo: {
       type: String,
-      default: 'no-photo.jpg',
+      default: 'no-photo.jpg'
     },
     createdAt: {
       type: Date,
       default: Date.now,
-      immutable: true,
+      immutable: true
     },
+    favorites: Array
   },
   {
     toJSON: {
-      virtuals: true,
+      virtuals: true
     },
     toObject: {
-      virtuals: true,
-    },
+      virtuals: true
+    }
   }
 );
 
@@ -81,7 +83,7 @@ UserSchema.pre('save', async function (next) {
 
 UserSchema.methods.getSignedJwtToken = function () {
   return jwt.sign({ id: this._id }, env.jwt.secret as string, {
-    expiresIn: env.jwt.expire as StringValue,
+    expiresIn: env.jwt.expire as StringValue
   });
 };
 

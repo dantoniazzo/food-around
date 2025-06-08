@@ -4,19 +4,14 @@ import {
   JsonController,
   Post,
   UseAfter,
-  QueryParam,
-  Param,
   Get,
-  Res,
-  Req,
-  Put
+  Res
 } from 'routing-controllers';
 import { ErrorHandlerMiddleware } from '../middlewares/errorMiddleware';
 import { AuthService } from '../services/authService';
 import { Service } from 'typedi';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
-import { response, Response, Request } from 'express';
-import { env } from '../config/env';
+import { Response } from 'express';
 import { UserLoginAttributes } from '../dto/user';
 
 @JsonController('/auth')
@@ -42,78 +37,6 @@ export class AuthController {
         secure: true
       })
       .json(userData);
-  }
-
-  @Get('/verify/email')
-  @ResponseSchema(UserLoginAttributes)
-  public async verify(
-    @Res() response: Response,
-    @QueryParam('token') token: string
-  ) {
-    try {
-      const user = await this.authService.verify(token);
-      response
-        .cookie('token', user.token, {
-          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-          httpOnly: true,
-          sameSite: 'none',
-          secure: true
-        })
-        .redirect(`${env.frontend.url}/dashboard`);
-    } catch (err) {
-      response.redirect(`${env.frontend.url}/email-verification-error`);
-    }
-
-    return response;
-  }
-
-  @Get('/resend')
-  @HttpCode(204)
-  public async resend(@QueryParam('email') email: string) {
-    return this.authService.resend(email);
-  }
-
-  @Get('/forgotpassword')
-  @HttpCode(204)
-  public async forgotPassword(@QueryParam('email') email: string) {
-    return this.authService.forgotPassword(email);
-  }
-
-  @Get('/verify/password')
-  @HttpCode(200)
-  public async verifyPasswordToken(
-    @Res() response: Response,
-    @QueryParam('token') token: string
-  ) {
-    let redirectPage: string;
-    try {
-      await this.authService.verifyResetPasswordToken(token);
-      redirectPage = 'reset-password';
-    } catch (err) {
-      redirectPage = 'password-reset-error';
-    }
-
-    return response.redirect(`${env.frontend.url}/${redirectPage}`);
-  }
-
-  @Put('/resetpassword')
-  @HttpCode(200)
-  public async resetPassword(
-    @Res() response: Response,
-    @Body() resetBody: UserLoginAttributes
-  ) {
-    const user = await this.authService.resetPassword(
-      resetBody.email,
-      resetBody.password
-    );
-    return response
-      .cookie('token', user.token, {
-        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        httpOnly: true,
-        sameSite: 'none',
-        secure: true
-      })
-      .json(user);
   }
 
   @Post('/login')

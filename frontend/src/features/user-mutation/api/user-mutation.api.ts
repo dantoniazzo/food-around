@@ -10,5 +10,11 @@ export const userMutationApi = baseApi.injectEndpoints({
         body: attributes,
       }),
     }),
+    deleteUser: build.mutation({
+      query: () => ({
+        url: '/user',
+        method: 'DELETE',
+      }),
+    }),
   }),
 });

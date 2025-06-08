@@ -3,14 +3,10 @@ import {
   IsNotEmpty,
   MinLength,
   MaxLength,
-  ValidateNested,
   IsString,
   IsOptional
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { Identifier } from './index';
 import { UserLogin } from '../interfaces/user';
-import { Restaurant } from '../interfaces/restaurants';
 
 export class UserLoginAttributes implements UserLogin {
   @IsOptional()
@@ -28,12 +24,11 @@ export class UserLoginAttributes implements UserLogin {
   })
   name: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   password: string;
 }
 
 export class UserAttributes extends UserLoginAttributes {
   token?: string;
-  favorites?: Restaurant[];
 }

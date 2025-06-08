@@ -45,8 +45,7 @@ export class UserController {
   @HttpCode(201)
   @ResponseSchema(UserAttributes)
   public put(@Req() request: { id: string }, @Body() body: UserAttributes) {
-    console.log('Request received: ', body);
-    /* return this.userService.update(request.id, body.data.attributes); */
+    return this.userService.update(request.id, body);
   }
 
   @Delete()
