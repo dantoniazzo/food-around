@@ -7,9 +7,18 @@ import {
   useRestaurantsSearch,
   openEventListener,
   removeEventListener,
+  formatOpenHours,
 } from 'features/restaurants';
 import './styles.css';
 import { MAP_CONTAINER_ID } from '../lib';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+
+import type { Restaurant } from 'entities/restaurant';
 
 export const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -17,6 +26,8 @@ export const Map = () => {
 
   const { displayNearbyRestaurants } = useRestaurantsSearch();
   const [, setMapLoaded] = useState(false);
+  const [selectedRestaurant, setSelectedRestaurant] =
+    useState<Restaurant | null>(null);
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
@@ -44,7 +55,8 @@ export const Map = () => {
       });
     });
     openEventListener((restaurant) => {
-      console.log('Restaurant', restaurant);
+      console.log('Restaurant: ', restaurant);
+      setSelectedRestaurant(restaurant);
     });
 
     return () => {
@@ -52,6 +64,9 @@ export const Map = () => {
     };
   }, []);
 
+  const handleClose = () => {
+    setSelectedRestaurant(null);
+  };
   return (
     <>
       <div className="absolute top-10 w-full h-full z-1 flex justify-center items-baseline pointer-events-none">
@@ -81,6 +96,45 @@ export const Map = () => {
         ref={mapContainerRef}
         className="w-full h-full"
       />
+
+      <Dialog onClose={handleClose} open={!!selectedRestaurant}>
+        <DialogTitle textAlign={'center'} fontSize={24}>
+          {selectedRestaurant?.name}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            textAlign={'center'}
+            marginTop={2}
+            marginBottom={4}
+            fontSize={16}
+          >
+            {selectedRestaurant?.address}
+          </DialogContentText>
+          {selectedRestaurant?.phone && (
+            <DialogContentText marginY={1} fontSize={14}>
+              <b>Phone:</b> {selectedRestaurant?.phone}
+            </DialogContentText>
+          )}
+          {selectedRestaurant?.openHours && (
+            <DialogContentText fontWeight={'bold'} marginY={1} fontSize={14}>
+              Open hours:
+            </DialogContentText>
+          )}
+
+          {selectedRestaurant?.openHours?.map((openHours) => {
+            return (
+              <DialogContentText fontSize={14}>
+                {formatOpenHours(openHours)}
+              </DialogContentText>
+            );
+          })}
+        </DialogContent>
+        <DialogActions>
+          <Button color="inherit" onClick={handleClose}>
+            Go to restaurant page
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

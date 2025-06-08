@@ -20,3 +20,12 @@ mapbox-search-listbox > div > div {
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
 }
+
+.MuiPaper-root {
+  padding: 10px 20px;
+  border-radius: 16px !important;
+  width: 30%;
+  background-color: rgba(0, 0, 0, 0.721) !important;
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}

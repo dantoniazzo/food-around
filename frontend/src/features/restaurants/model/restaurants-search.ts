@@ -36,6 +36,9 @@ export const useRestaurantsSearch = () => {
         name: feature.properties.name,
         coordinates: feature.geometry.coordinates as [number, number],
         maki: feature.properties.maki as RestaurantMakis,
+        address: feature.properties.address,
+        openHours: feature.properties.metadata?.open_hours?.periods,
+        phone: feature.properties.metadata?.phone,
       };
     });
   };
