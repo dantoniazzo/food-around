@@ -108,7 +108,6 @@ export const Map = () => {
             className="absolute top-6 right-5 cursor-pointer"
             onClick={() => {
               const viewer = getMe();
-              console.log('Viewr: ', viewer);
               if (!viewer || !selectedRestaurant) return;
               const favorites = viewer.favorites;
               let newFavorites = [];
@@ -136,7 +135,16 @@ export const Map = () => {
               handleUpdateUser(updatedViewer);
             }}
           >
-            <GradeIcon color="inherit" fontSize="large" />
+            <GradeIcon
+              color={
+                getMe()?.favorites?.find(
+                  (favorite) => favorite.id === selectedRestaurant?.id
+                )
+                  ? 'warning'
+                  : 'inherit'
+              }
+              fontSize="large"
+            />
           </div>
         </DialogTitle>
         <DialogContent>
