@@ -17,6 +17,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
+import GradeIcon from '@mui/icons-material/Grade';
 
 import type { Restaurant } from 'entities/restaurant';
 
@@ -100,6 +101,9 @@ export const Map = () => {
       <Dialog onClose={handleClose} open={!!selectedRestaurant}>
         <DialogTitle textAlign={'center'} fontSize={24}>
           {selectedRestaurant?.name}
+          <div className="absolute top-6 right-5">
+            <GradeIcon color="inherit" fontSize="large" />
+          </div>
         </DialogTitle>
         <DialogContent>
           <DialogContentText
