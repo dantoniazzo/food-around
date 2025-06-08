@@ -16,6 +16,6 @@ export const baseApi = createApi({
       credentials: 'include',
     })
   ),
-  tagTypes: [TAGS.FAVORITES, TAGS.AUTH, TAGS.USER],
+  tagTypes: [TAGS.FAVORITES, TAGS.USER],
   endpoints: () => ({}),
 });

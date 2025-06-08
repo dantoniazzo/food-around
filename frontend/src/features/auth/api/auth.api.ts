@@ -8,6 +8,7 @@ export const authApi = baseApi.injectEndpoints({
       query: () => ({
         url: '/user/me',
       }),
+      providesTags: [TAGS.USER],
     }),
     signup: build.mutation<IUser, ISignUpData>({
       query: (attributes) => ({
@@ -15,7 +16,7 @@ export const authApi = baseApi.injectEndpoints({
         method: 'POST',
         body: attributes,
       }),
-      invalidatesTags: [TAGS.AUTH, TAGS.USER],
+      invalidatesTags: [TAGS.USER],
     }),
     signin: build.mutation<IUser, ISignInData>({
       query: (attributes) => ({
@@ -23,6 +24,7 @@ export const authApi = baseApi.injectEndpoints({
         method: 'POST',
         body: attributes,
       }),
+      invalidatesTags: [TAGS.USER],
     }),
   }),
 });

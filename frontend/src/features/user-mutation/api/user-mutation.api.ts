@@ -1,4 +1,4 @@
-import { baseApi } from 'app/redux';
+import { baseApi, TAGS } from 'app/redux';
 import type { IUser } from 'entities/user';
 
 export const userMutationApi = baseApi.injectEndpoints({
@@ -9,6 +9,7 @@ export const userMutationApi = baseApi.injectEndpoints({
         method: 'PUT',
         body: attributes,
       }),
+      invalidatesTags: [TAGS.USER],
     }),
     deleteUser: build.mutation({
       query: () => ({
