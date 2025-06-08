@@ -14,9 +14,11 @@ export class AuthService {
 
   public async register(user: User) {
     const data = await this.userModel.create(user);
-    const confirmEmailToken = data.generateEmailConfirmToken();
-    const confirmEmailURL = `${env.app.host}/${env.app.routePrefix}/auth/verify/email?token=${confirmEmailToken}`;
-    data.save({ validateBeforeSave: false });
+    await data.save({ validateBeforeSave: false });
+    return {
+      id: data._id,
+      token: data.getSignedJwtToken()
+    };
   }
 
   public async verify(token: string) {
@@ -29,7 +31,7 @@ export class AuthService {
     // get user by token
     const user = await this.userModel.findOne({
       confirmEmailToken,
-      isEmailConfirmed: false,
+      isEmailConfirmed: false
     });
 
     if (!user) {
@@ -45,7 +47,7 @@ export class AuthService {
 
     return {
       id: user._id,
-      token: user.getSignedJwtToken(),
+      token: user.getSignedJwtToken()
     };
   }
 
@@ -87,7 +89,7 @@ export class AuthService {
 
     const user = await this.userModel.findOne({
       resetPasswordToken,
-      resetPasswordExpire: { $gt: new Date(Date.now()) },
+      resetPasswordExpire: { $gt: new Date(Date.now()) }
     });
 
     if (!user) {
@@ -117,7 +119,7 @@ export class AuthService {
 
     return {
       id: user._id,
-      token: user.getSignedJwtToken(),
+      token: user.getSignedJwtToken()
     };
   }
 
@@ -127,13 +129,13 @@ export class AuthService {
     if (!user.email) {
       data = await this.userModel
         .findOne({
-          name: user.name,
+          name: user.name
         })
         .select('+password');
     } else {
       data = await this.userModel
         .findOne({
-          email: user.email,
+          email: user.email
         })
         .select('+password');
     }
@@ -149,7 +151,7 @@ export class AuthService {
 
     return {
       id: data._id,
-      token: data.getSignedJwtToken(),
+      token: data.getSignedJwtToken()
     };
   }
 }

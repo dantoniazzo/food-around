@@ -8,6 +8,7 @@ import {
   Param,
   Get,
   Res,
+  Req,
   Put
 } from 'routing-controllers';
 import { UserLoginDto } from '../dto/user';
@@ -16,7 +17,7 @@ import { ErrorHandlerMiddleware } from '../middlewares/errorMiddleware';
 import { AuthService } from '../services/authService';
 import { Service } from 'typedi';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
-import { Response } from 'express';
+import { response, Response, Request } from 'express';
 import { env } from '../config/env';
 
 @JsonController('/auth')
@@ -29,9 +30,16 @@ export class AuthController {
   @Post('/register')
   @HttpCode(201)
   @ResponseSchema(UserDto)
-  public register(@Body() body: UserDto) {
-    console.log('Receiving request!');
-    return this.authService.register(body.data.attributes);
+  public async register(@Res() response: Response, @Body() body: UserDto) {
+    const userData = await this.authService.register(body.data.attributes);
+    return response
+      .cookie('token', userData.token, {
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true
+      })
+      .json(userData);
   }
 
   @Get('/verify/email')

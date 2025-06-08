@@ -10,7 +10,7 @@ export const getItem = (key: LocalStorageKeys) => {
   return localStorage.getItem(key);
 };
 export const setItem = (key: LocalStorageKeys, value: string) => {
-  localStorage.setItem(key, JSON.stringify(value));
+  localStorage.setItem(key, value);
 };
 
 export const getParsedItem = (key: LocalStorageKeys) => {

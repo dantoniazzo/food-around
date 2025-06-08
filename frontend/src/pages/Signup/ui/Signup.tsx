@@ -6,7 +6,7 @@ import { authApi, type ISignUpData } from 'features/auth';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
-import { ErrorMessage } from 'shared';
+import { ErrorMessage, LocalStorageKeys, setItem } from 'shared';
 
 export const regex =
   // eslint-disable-next-line
@@ -45,6 +45,9 @@ export const Signup = () => {
   const onSubmit: SubmitHandler<ISignUpData> = async (data) => {
     setLoading(true);
     const user = await handleSignUp(data);
+    if (user && user.data) {
+      setItem(LocalStorageKeys.USER_ID, user.data.id);
+    }
     setLoading(false);
   };
 

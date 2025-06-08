@@ -3,9 +3,9 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { Restaurant } from 'pages/Restaurant';
-import { getItem, LocalStorageKeys } from 'shared';
 import { Login } from 'pages/Login';
 import { Signup } from 'pages/Signup';
+import { ProtectedRoute } from 'features/auth/ui/ProtectedRoute';
 
 const darkTheme = createTheme({
   palette: {
@@ -22,7 +22,11 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={getItem(LocalStorageKeys.USER_ID) ? <Map /> : <Login />}
+              element={
+                <ProtectedRoute>
+                  <Map />
+                </ProtectedRoute>
+              }
             />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

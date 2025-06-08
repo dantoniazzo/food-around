@@ -1,7 +1,6 @@
 export interface IErrorResponse {
-  data: {
-    errors: IError[];
-  };
+  status: string;
+  error: string;
 }
 
 export interface IError {

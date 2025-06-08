@@ -8,10 +8,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { env } from '../config/env';
 import { Document, Model } from 'mongoose';
 import { UserDocument } from '../models/userModel';
-
-interface JwtPayloadId extends JwtPayload {
-  id?: any;
-}
+import { decodeJwt } from '../utils/jwt';
 
 @Service()
 export class AuthMiddleware implements ExpressMiddlewareInterface {
@@ -34,11 +31,7 @@ export class AuthMiddleware implements ExpressMiddlewareInterface {
     }
 
     try {
-      const decoded = jwt.verify(
-        token,
-        env.jwt.secret as string
-      ) as JwtPayloadId;
-      //req.user = decoded.id;
+      const decoded = decodeJwt(token);
       const foundUser = await this.userModel.findById(decoded.id);
       if (!foundUser) {
         console.debug('User not found');
