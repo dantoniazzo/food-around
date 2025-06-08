@@ -1,6 +1,6 @@
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { authApi, type ISignUpData } from 'features/auth';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
@@ -31,7 +31,7 @@ const schema = yup
 export const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [handleSignUp, { error }] = authApi.endpoints.signup.useMutation();
-
+  const navigate = useNavigate();
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       name: '',
@@ -47,6 +47,7 @@ export const Signup = () => {
     const user = await handleSignUp(data);
     if (user && user.data) {
       setItem(LocalStorageKeys.USER_ID, user.data.id);
+      navigate('/');
     }
     setLoading(false);
   };

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { authApi } from '../api';
-import { type IErrorResponse } from 'app/redux';
-import { Login } from 'pages/Login';
+import { useNavigate } from 'react-router-dom';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -10,21 +9,18 @@ interface ProtectedRouteProps {
 export const ProtectedRoute = (props: ProtectedRouteProps) => {
   const [authorized, setAuthorized] = useState<boolean>(false);
   const [handleMe] = authApi.endpoints.me.useLazyQuery();
-
+  const navigate = useNavigate();
   const checkAuth = useCallback(async () => {
-    try {
-      const me = await handleMe(undefined);
-      if (me) setAuthorized(true);
-    } catch (err) {
-      console.log('Error', (err as IErrorResponse).error);
+    const me = await handleMe(undefined);
+    if (me.isError) {
       setAuthorized(false);
-    }
-  }, [handleMe]);
+      navigate('/login');
+    } else setAuthorized(true);
+  }, [handleMe, navigate]);
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
   if (authorized) return props.children;
-  else return <Login />;
 };
