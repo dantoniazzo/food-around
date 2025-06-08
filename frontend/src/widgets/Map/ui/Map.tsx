@@ -8,6 +8,7 @@ import {
   openEventListener,
   removeEventListener,
   formatOpenHours,
+  useRestaurantsMarkers,
 } from 'features/restaurants';
 import './styles.css';
 import { MAP_CONTAINER_ID } from '../lib';
@@ -26,9 +27,10 @@ import { useViewer } from 'entities/viewer';
 export const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<MapType | undefined>(undefined);
-  const { getMe } = useViewer();
+  const { me } = useViewer();
   const [handleUpdateUser] = userMutationApi.endpoints.updateUser.useMutation();
   const { displayNearbyRestaurants } = useRestaurantsSearch();
+  const { drawRestaurantMarkers } = useRestaurantsMarkers();
   const [, setMapLoaded] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<Restaurant | null>(null);
@@ -59,7 +61,6 @@ export const Map = () => {
       });
     });
     openEventListener((restaurant) => {
-      console.log('Restaurant: ', restaurant);
       setSelectedRestaurant(restaurant);
     });
 
@@ -67,6 +68,14 @@ export const Map = () => {
       removeEventListener();
     };
   }, []);
+
+  useEffect(() => {
+    const favorites = me?.favorites;
+    const map = mapInstanceRef.current;
+    if (favorites && map) {
+      drawRestaurantMarkers(map, favorites, { shouldHighlight: true });
+    }
+  }, [me]);
 
   const handleClose = () => {
     setSelectedRestaurant(null);
@@ -107,7 +116,7 @@ export const Map = () => {
           <div
             className="absolute top-6 right-5 cursor-pointer"
             onClick={() => {
-              const viewer = getMe();
+              const viewer = me;
               if (!viewer || !selectedRestaurant) return;
               const favorites = viewer.favorites;
               let newFavorites = [];
@@ -137,7 +146,7 @@ export const Map = () => {
           >
             <GradeIcon
               color={
-                getMe()?.favorites?.find(
+                me?.favorites?.find(
                   (favorite) => favorite.id === selectedRestaurant?.id
                 )
                   ? 'warning'

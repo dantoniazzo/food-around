@@ -4,10 +4,17 @@ import { openEvent } from './restaurant-events';
 
 import mapboxgl, { Map, Marker } from 'mapbox-gl';
 
-const existingMarkers: Marker[] = [];
-
 export const useRestaurantsMarkers = () => {
-  const drawRestaurantMarkers = async (map: Map, restaurants: Restaurant[]) => {
+  const existingMarkers: Marker[] = [];
+
+  interface DrawMarkersOptions {
+    shouldHighlight?: boolean;
+  }
+  const drawRestaurantMarkers = async (
+    map: Map,
+    restaurants: Restaurant[],
+    options?: DrawMarkersOptions
+  ) => {
     existingMarkers.forEach((marker) => {
       marker.remove();
     });
@@ -21,6 +28,8 @@ export const useRestaurantsMarkers = () => {
       const width = 30;
       const height = 30;
       el.className = 'marker';
+      el.style.borderRadius = '100%';
+      if (options?.shouldHighlight) el.style.border = '2px solid #2af50f';
       el.style.backgroundImage = `url(${getImageUrl(restaurant.name, maki)})`;
       el.style.width = `${width}px`;
       el.style.height = `${height}px`;
