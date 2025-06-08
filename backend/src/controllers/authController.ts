@@ -30,6 +30,7 @@ export class AuthController {
   @HttpCode(201)
   @ResponseSchema(UserDto)
   public register(@Body() body: UserDto) {
+    console.log('Receiving request!');
     return this.authService.register(body.data.attributes);
   }
 

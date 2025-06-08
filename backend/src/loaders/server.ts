@@ -47,4 +47,8 @@ export const serverLoader = () => {
   // its important to set container before any operation you do with routing-controllers,
   // including importing controllers
   useContainer(Container);
+
+  app.listen(env.app.port, () => {
+    console.log(`Serving on port ${env.app.port}`);
+  });
 };
