@@ -4,19 +4,9 @@ Find nearby restaurants, coffee shops, bakeries and other food and drink places.
 
 ## How to start the project
 
-A couple npms and you're good to go.
-
 ```js
 npm install
 ```
-
-or just
-
-```js
-npm i
-```
-
-if you don't like typing. And then:
 
 ```js
 npm run dev
