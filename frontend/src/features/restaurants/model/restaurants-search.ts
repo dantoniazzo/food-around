@@ -32,7 +32,7 @@ export const useRestaurantsSearch = () => {
     console.log('searchResult: ', searchResult);
     return searchResult.features.map((feature) => {
       return {
-        id: feature.id || '',
+        id: feature.properties.mapbox_id || '',
         name: feature.properties.name,
         coordinates: feature.geometry.coordinates as [number, number],
         maki: feature.properties.maki as RestaurantMakis,

@@ -3,8 +3,13 @@ import { Geocoder } from '@mapbox/search-js-react';
 import mapboxgl, { Map as MapType } from 'mapbox-gl';
 import { env } from 'app/config';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useRestaurantsSearch } from 'features/restaurants';
+import {
+  useRestaurantsSearch,
+  openEventListener,
+  removeEventListener,
+} from 'features/restaurants';
 import './styles.css';
+import { MAP_CONTAINER_ID } from '../lib';
 
 export const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -38,6 +43,13 @@ export const Map = () => {
         coordinates: { lat: e.lngLat.lat, lng: e.lngLat.lng },
       });
     });
+    openEventListener((restaurant) => {
+      console.log('Restaurant', restaurant);
+    });
+
+    return () => {
+      removeEventListener();
+    };
   }, []);
 
   return (
@@ -64,7 +76,11 @@ export const Map = () => {
         />
       </div>
 
-      <div id="map-container" ref={mapContainerRef} className="w-full h-full" />
+      <div
+        id={MAP_CONTAINER_ID}
+        ref={mapContainerRef}
+        className="w-full h-full"
+      />
     </>
   );
 };

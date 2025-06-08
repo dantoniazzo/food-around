@@ -1,5 +1,6 @@
 import type { Restaurant, RestaurantMakis } from 'entities/restaurant';
 import { getImageUrl } from './restaurants.icons';
+import { openEvent } from './restaurant-events';
 
 import mapboxgl, { Map, Marker } from 'mapbox-gl';
 
@@ -25,8 +26,9 @@ export const useRestaurantsMarkers = () => {
       el.style.height = `${height}px`;
       el.style.backgroundSize = '100%';
       el.style.cursor = 'pointer';
-      el.addEventListener('click', () => {
-        window.alert(restaurant.name);
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openEvent(restaurant);
       });
 
       // Add markers to the map.
