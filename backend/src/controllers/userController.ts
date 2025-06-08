@@ -13,11 +13,11 @@ import {
   Res,
   UseBefore
 } from 'routing-controllers';
-import { UserDto } from '../dto/user';
 import { ErrorHandlerMiddleware } from '../middlewares/errorMiddleware';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { AuthMiddleware } from '../middlewares/authMiddleware';
-import { response, Response, Request } from 'express';
+import { Response, Request } from 'express';
+import { UserAttributes } from '../dto/user';
 
 @JsonController('/user')
 @Service()
@@ -36,15 +36,15 @@ export class UserController {
 
   @Get()
   @HttpCode(200)
-  @ResponseSchema(UserDto)
+  @ResponseSchema(UserAttributes)
   public get(@Req() request: { id: string }) {
     return this.userService.read(request.id);
   }
 
   @Put()
   @HttpCode(201)
-  @ResponseSchema(UserDto)
-  public put(@Req() request: { id: string }, @Body() body: UserDto) {
+  @ResponseSchema(UserAttributes)
+  public put(@Req() request: { id: string }, @Body() body: UserAttributes) {
     console.log('Request received: ', body);
     /* return this.userService.update(request.id, body.data.attributes); */
   }

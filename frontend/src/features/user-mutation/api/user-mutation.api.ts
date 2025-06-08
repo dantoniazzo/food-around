@@ -7,11 +7,7 @@ export const userMutationApi = baseApi.injectEndpoints({
       query: (attributes) => ({
         url: '/user',
         method: 'PUT',
-        body: {
-          data: {
-            attributes,
-          },
-        },
+        body: attributes,
       }),
     }),
   }),

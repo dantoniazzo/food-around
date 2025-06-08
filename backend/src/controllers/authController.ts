@@ -11,14 +11,13 @@ import {
   Req,
   Put
 } from 'routing-controllers';
-import { UserLoginDto } from '../dto/user';
-import { UserDto } from '../dto/user';
 import { ErrorHandlerMiddleware } from '../middlewares/errorMiddleware';
 import { AuthService } from '../services/authService';
 import { Service } from 'typedi';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { response, Response, Request } from 'express';
 import { env } from '../config/env';
+import { UserLoginAttributes } from '../dto/user';
 
 @JsonController('/auth')
 @Service()
@@ -29,9 +28,12 @@ export class AuthController {
 
   @Post('/register')
   @HttpCode(201)
-  @ResponseSchema(UserDto)
-  public async register(@Res() response: Response, @Body() body: UserDto) {
-    const userData = await this.authService.register(body.data.attributes);
+  @ResponseSchema(UserLoginAttributes)
+  public async register(
+    @Res() response: Response,
+    @Body() body: UserLoginAttributes
+  ) {
+    const userData = await this.authService.register(body);
     return response
       .cookie('token', userData.token, {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
@@ -43,7 +45,7 @@ export class AuthController {
   }
 
   @Get('/verify/email')
-  @ResponseSchema(UserDto)
+  @ResponseSchema(UserLoginAttributes)
   public async verify(
     @Res() response: Response,
     @QueryParam('token') token: string
@@ -98,11 +100,11 @@ export class AuthController {
   @HttpCode(200)
   public async resetPassword(
     @Res() response: Response,
-    @Body() resetBody: UserLoginDto
+    @Body() resetBody: UserLoginAttributes
   ) {
     const user = await this.authService.resetPassword(
-      resetBody.data.attributes.email,
-      resetBody.data.attributes.password
+      resetBody.email,
+      resetBody.password
     );
     return response
       .cookie('token', user.token, {
@@ -116,9 +118,12 @@ export class AuthController {
 
   @Post('/login')
   @HttpCode(200)
-  @ResponseSchema(UserDto)
-  public async login(@Res() response: Response, @Body() body: UserLoginDto) {
-    const user = await this.authService.login(body.data.attributes);
+  @ResponseSchema(UserLoginAttributes)
+  public async login(
+    @Res() response: Response,
+    @Body() body: UserLoginAttributes
+  ) {
+    const user = await this.authService.login(body);
     return response
       .cookie('token', user.token, {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),

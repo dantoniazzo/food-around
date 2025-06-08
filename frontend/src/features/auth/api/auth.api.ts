@@ -13,12 +13,7 @@ export const authApi = baseApi.injectEndpoints({
       query: (attributes) => ({
         url: '/auth/register',
         method: 'POST',
-        body: {
-          data: {
-            attributes,
-            type: 'user',
-          },
-        },
+        body: attributes,
       }),
       invalidatesTags: [TAGS.AUTH, TAGS.USER],
     }),
@@ -26,12 +21,7 @@ export const authApi = baseApi.injectEndpoints({
       query: (attributes) => ({
         url: '/auth/login',
         method: 'POST',
-        body: {
-          data: {
-            attributes,
-            type: 'user',
-          },
-        },
+        body: attributes,
       }),
     }),
   }),

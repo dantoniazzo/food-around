@@ -12,7 +12,7 @@ import { Identifier } from './index';
 import { UserLogin } from '../interfaces/user';
 import { Restaurant } from '../interfaces/restaurants';
 
-class UserLoginAttributes implements UserLogin {
+export class UserLoginAttributes implements UserLogin {
   @IsOptional()
   @IsEmail(undefined, {
     message: 'Please add a valid email'
@@ -33,31 +33,7 @@ class UserLoginAttributes implements UserLogin {
   password: string;
 }
 
-class UserLoginObject extends Identifier {
-  @ValidateNested()
-  @Type(() => UserLoginAttributes)
-  attributes: UserLoginAttributes;
-}
-
-class UserAttributes extends UserLoginAttributes {
+export class UserAttributes extends UserLoginAttributes {
   token?: string;
   favorites?: Restaurant[];
-}
-
-class UserObject extends Identifier {
-  @ValidateNested()
-  @Type(() => UserAttributes)
-  attributes: UserAttributes;
-}
-
-export class UserDto {
-  @ValidateNested()
-  @Type(() => UserObject)
-  data: UserObject;
-}
-
-export class UserLoginDto {
-  @ValidateNested()
-  @Type(() => UserLoginObject)
-  data: UserLoginObject;
 }
