@@ -4,7 +4,7 @@ import mapboxgl, { Map as MapType } from 'mapbox-gl';
 import { env } from 'app/config';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import {
-  useRestaurantsSearch,
+  useMapboxRestaurantsSearch,
   useRestaurantsMarkers,
 } from 'features/restaurants';
 import './styles.css';
@@ -17,7 +17,7 @@ export const MapboxMap = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<MapType | undefined>(undefined);
   const { me } = useViewer();
-  const { displayNearbyRestaurants } = useRestaurantsSearch();
+  const { displayNearbyRestaurants } = useMapboxRestaurantsSearch();
   const { drawRestaurantMarkers } = useRestaurantsMarkers();
   const [, setMapLoaded] = useState(false);
 

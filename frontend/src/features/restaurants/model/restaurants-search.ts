@@ -1,9 +1,10 @@
-import type { Restaurant, RestaurantMakis } from 'entities/restaurant';
+import { type Restaurant, RestaurantMakis } from 'entities/restaurant';
 import { useSearchBoxApi } from 'features/search';
 import type { Coordinates } from 'shared';
 import { useRestaurantsMarkers } from './restaurants-markers';
 import { Map } from 'mapbox-gl';
 import { useViewer } from 'entities/viewer';
+import { RADIUS } from 'widgets/Map';
 
 export interface SearchArgs {
   map: Map;
@@ -11,7 +12,7 @@ export interface SearchArgs {
   options?: { bbox: [number, number, number, number] };
 }
 
-export const useRestaurantsSearch = () => {
+export const useMapboxRestaurantsSearch = () => {
   const searchApi = useSearchBoxApi();
   const { me } = useViewer();
   const { drawRestaurantMarkers } = useRestaurantsMarkers();
@@ -55,4 +56,51 @@ export const useRestaurantsSearch = () => {
     displayNearbyRestaurants,
     findRestaurants,
   };
+};
+
+export const findGoogleRestaurantsFromCoordinates = (
+  map: google.maps.Map,
+  location: google.maps.LatLngLiteral,
+  callback: (center: google.maps.LatLng, restaurants: Restaurant[]) => void
+) => {
+  const coordinates = { lat: location?.lat, lng: location?.lng };
+  const center = new google.maps.LatLng(coordinates.lat, coordinates.lng);
+  map.setCenter(center);
+  map.setZoom(15);
+  const request = {
+    location: center,
+    radius: RADIUS,
+    type: 'restaurant',
+  };
+
+  const searchCallback = (
+    results: google.maps.places.PlaceResult[] | null,
+    status: google.maps.places.PlacesServiceStatus
+  ) => {
+    if (
+      results &&
+      results.length &&
+      status == google.maps.places.PlacesServiceStatus.OK
+    ) {
+      console.log('Results: ', results);
+      const restaurants: Restaurant[] = results
+        .map((result) => {
+          const location = result.geometry?.location;
+          if (!location || !result.place_id || !result.name || !result.vicinity)
+            return;
+          return {
+            name: result.name,
+            maki: RestaurantMakis.RESTAURANT,
+            coordinates: [location.lat(), location.lng()] as [number, number],
+            address: result.vicinity,
+            id: result.place_id,
+          };
+        })
+        .filter((restaurant) => !!restaurant);
+      callback(center, restaurants);
+    }
+  };
+
+  const service = new google.maps.places.PlacesService(map);
+  service.nearbySearch(request, searchCallback);
 };

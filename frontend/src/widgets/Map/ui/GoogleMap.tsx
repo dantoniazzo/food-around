@@ -9,10 +9,19 @@ import { GoogleMapsSearch } from './GoogleMapsSearch';
 import type { Restaurant } from 'entities/restaurant';
 import { Circle } from './Circle';
 import { useState } from 'react';
+import { findGoogleRestaurantsFromCoordinates } from 'features/restaurants';
 
 export const GoogleMap = () => {
   const [center, setCenter] = useState<google.maps.LatLng | null>(null);
   const [locations, setLocations] = useState<Restaurant[] | null>(null);
+
+  const mainCallback = (
+    center: google.maps.LatLng,
+    restaurants: Restaurant[]
+  ) => {
+    setCenter(center);
+    setLocations(restaurants);
+  };
 
   return (
     <div className="w-full h-full">
@@ -26,7 +35,9 @@ export const GoogleMap = () => {
           defaultCenter={{ lat: 45.750367, lng: 15.994705 }}
           mapId={GOOGLE_MAP_ID}
           onClick={(e) => {
-            console.log('Map click event: ', e);
+            const latLng = e.detail.latLng;
+            if (!latLng) return;
+            findGoogleRestaurantsFromCoordinates(e.map, latLng, mainCallback);
           }}
         >
           {locations && <PoiMarkers pois={locations} />}
@@ -39,12 +50,7 @@ export const GoogleMap = () => {
             fillColor={'#3b82f6'}
             fillOpacity={0.3}
           />
-          <GoogleMapsSearch
-            onPlaceSelected={(center, restaurants) => {
-              setCenter(center);
-              setLocations(restaurants);
-            }}
-          />
+          <GoogleMapsSearch onPlaceSelected={mainCallback} />
         </Map>
         <div className="absolute bottom-5 left-5">
           {' '}

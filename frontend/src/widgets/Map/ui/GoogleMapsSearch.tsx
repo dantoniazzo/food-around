@@ -1,8 +1,8 @@
 import { usePlacesWidget } from 'react-google-autocomplete';
 import { env } from 'app/config';
 import { useMap } from '@vis.gl/react-google-maps';
-import { RestaurantMakis, type Restaurant } from 'entities/restaurant';
-import { RADIUS } from '../lib';
+import { type Restaurant } from 'entities/restaurant';
+import { findGoogleRestaurantsFromCoordinates } from 'features/restaurants';
 
 interface GoogleSearchProps {
   onPlaceSelected: (
@@ -18,54 +18,11 @@ export const GoogleMapsSearch = (props: GoogleSearchProps) => {
     onPlaceSelected: (place) => {
       const location = place.geometry?.location;
       if (!location || !map) return;
-      const coordinates = { lat: location?.lat(), lng: location?.lng() };
-      const center = new google.maps.LatLng(coordinates.lat, coordinates.lng);
-      map.setCenter(center);
-      map.setZoom(15);
-      const request = {
-        location: center,
-        radius: RADIUS,
-        type: 'restaurant',
-      };
-
-      const callback = (
-        results: google.maps.places.PlaceResult[] | null,
-        status: google.maps.places.PlacesServiceStatus
-      ) => {
-        if (
-          results &&
-          results.length &&
-          status == google.maps.places.PlacesServiceStatus.OK
-        ) {
-          console.log('Results: ', results);
-          const restaurants: Restaurant[] = results
-            .map((result) => {
-              const location = result.geometry?.location;
-              if (
-                !location ||
-                !result.place_id ||
-                !result.name ||
-                !result.vicinity
-              )
-                return;
-              return {
-                name: result.name,
-                maki: RestaurantMakis.RESTAURANT,
-                coordinates: [location.lat(), location.lng()] as [
-                  number,
-                  number
-                ],
-                address: result.vicinity,
-                id: result.place_id,
-              };
-            })
-            .filter((restaurant) => !!restaurant);
-          props.onPlaceSelected(center, restaurants);
-        }
-      };
-
-      const service = new google.maps.places.PlacesService(map);
-      service.nearbySearch(request, callback);
+      findGoogleRestaurantsFromCoordinates(
+        map,
+        { lat: location.lat(), lng: location.lng() },
+        props.onPlaceSelected
+      );
     },
   });
   return (
