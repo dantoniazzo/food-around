@@ -31,7 +31,7 @@ export const serverLoader = () => {
     },
     controllers: [AuthController, UserController],
     middlewares: [ErrorHandlerMiddleware, AuthMiddleware],
-    routePrefix: env.app.routePrefix,
+    routePrefix: 'api',
     defaults: {
       //with this option, null will return 404 by default
       nullResultCode: 404,

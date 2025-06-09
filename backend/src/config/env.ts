@@ -11,9 +11,7 @@ dotenv.config({
 export const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
   app: {
-    port: process.env.PORT || '5000',
-    routePrefix: process.env.APP_API_PREFIX || 'api',
-    host: process.env.APP_HOST
+    port: process.env.PORT || '5000'
   },
   jwt: {
     secret: process.env.JWT_SECRET,
