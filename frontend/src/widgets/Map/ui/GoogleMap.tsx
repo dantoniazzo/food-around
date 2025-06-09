@@ -10,7 +10,16 @@ import { PoiMarkers } from './PoiMarkers';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import MapIcon from '@mui/icons-material/Map';
+import { usePlacesWidget } from 'react-google-autocomplete';
+import TextField from '@mui/material/TextField';
+
 export const GoogleMap = () => {
+  const { ref, autocompleteRef } = usePlacesWidget({
+    apiKey: env.googleMaps.apiKey,
+    onPlaceSelected: (place) => {
+      console.log(place);
+    },
+  });
   const locations: Poi[] = [
     { key: 'operaHouse', location: { lat: -33.8567844, lng: 151.213108 } },
     { key: 'tarongaZoo', location: { lat: -33.8472767, lng: 151.2188164 } },
@@ -31,13 +40,15 @@ export const GoogleMap = () => {
     { key: 'darlingHarbour', location: { lat: -33.87488, lng: 151.1987113 } },
     { key: 'barangaroo', location: { lat: -33.8605523, lng: 151.1972205 } },
   ];
+
   return (
-    <APIProvider
-      apiKey={env.googleMaps.apiKey}
-      onLoad={() => console.log('Maps API has loaded.')}
-    >
-      <div className="w-full h-full">
-        <Map
+    <div className="w-full h-full">
+      {' '}
+      <APIProvider
+        apiKey={env.googleMaps.apiKey}
+        onLoad={() => console.log('Maps API has loaded.')}
+      >
+        {/*   <Map
           defaultZoom={13}
           defaultCenter={{ lat: -33.860664, lng: 151.208138 }}
           mapId={GOOGLE_MAP_ID}
@@ -60,8 +71,9 @@ export const GoogleMap = () => {
               &nbsp; Switch to Mapbox
             </Button>
           </Link>
-        </div>
-      </div>
-    </APIProvider>
+        </div> */}
+      </APIProvider>{' '}
+      <input ref={ref} />
+    </div>
   );
 };
