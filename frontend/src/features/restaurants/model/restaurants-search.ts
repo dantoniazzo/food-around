@@ -82,7 +82,6 @@ export const findGoogleRestaurantsFromCoordinates = (
       results.length &&
       status == google.maps.places.PlacesServiceStatus.OK
     ) {
-      console.log('Results: ', results);
       const restaurants: Restaurant[] = results
         .map((result) => {
           const location = result.geometry?.location;

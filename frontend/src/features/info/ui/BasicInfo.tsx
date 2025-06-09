@@ -17,12 +17,14 @@ import { useViewer } from 'entities/viewer';
 import { getItem, LocalStorageKeys } from 'shared';
 import { userMutationApi } from 'features/user-mutation';
 import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
 import './styles.css';
 
 export const BasicInfo = () => {
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<Restaurant | null>(null);
   const { me } = useViewer();
+  const navigate = useNavigate();
   const [handleUpdateUser] = userMutationApi.endpoints.updateUser.useMutation();
 
   const handleClose = () => {
@@ -146,7 +148,13 @@ export const BasicInfo = () => {
         )}
       </DialogContent>
       <DialogActions>
-        <Button color="inherit" onClick={handleClose}>
+        <Button
+          color="inherit"
+          onClick={() => {
+            handleClose();
+            navigate(`/${selectedRestaurant?.id}`);
+          }}
+        >
           More details
         </Button>
       </DialogActions>

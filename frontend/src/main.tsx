@@ -9,6 +9,12 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { Provider } from 'react-redux';
 
+declare global {
+  interface Window {
+    map: google.maps.Map | null;
+  }
+}
+
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <StrictMode>

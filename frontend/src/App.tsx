@@ -9,6 +9,8 @@ import { ProtectedRoute } from 'features/auth/ui/ProtectedRoute';
 import { Home } from 'pages/Home';
 import { BasicInfo } from 'features/info';
 import { APP_ID } from 'app/lib';
+import { env } from 'app/config';
+import { APIProvider } from '@vis.gl/react-google-maps';
 
 const darkTheme = createTheme({
   palette: {
@@ -32,13 +34,23 @@ function App() {
               }
             />
             <Route path="/mapbox" element={<MapboxMap />} />
-            <Route path="/google" element={<GoogleMap />} />
+            <Route
+              path="/google"
+              element={
+                <APIProvider
+                  apiKey={env.googleMaps.apiKey}
+                  onLoad={() => console.log('Maps API has loaded.')}
+                >
+                  <GoogleMap />
+                </APIProvider>
+              }
+            />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/:id" element={<Restaurant />} />
           </Routes>
+          <BasicInfo />
         </Router>
-        <BasicInfo />
       </div>
     </ThemeProvider>
   );
