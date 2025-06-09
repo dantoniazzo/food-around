@@ -2,9 +2,13 @@ import { usePlacesWidget } from 'react-google-autocomplete';
 import { env } from 'app/config';
 import { useMap } from '@vis.gl/react-google-maps';
 import { RestaurantMakis, type Restaurant } from 'entities/restaurant';
+import { RADIUS } from '../lib';
 
 interface GoogleSearchProps {
-  onPlaceSelected: (restaurants: Restaurant[]) => void;
+  onPlaceSelected: (
+    center: google.maps.LatLng,
+    restaurants: Restaurant[]
+  ) => void;
 }
 
 export const GoogleMapsSearch = (props: GoogleSearchProps) => {
@@ -20,7 +24,7 @@ export const GoogleMapsSearch = (props: GoogleSearchProps) => {
       map.setZoom(15);
       const request = {
         location: center,
-        radius: 2000,
+        radius: RADIUS,
         type: 'restaurant',
       };
 
@@ -56,7 +60,7 @@ export const GoogleMapsSearch = (props: GoogleSearchProps) => {
               };
             })
             .filter((restaurant) => !!restaurant);
-          props.onPlaceSelected(restaurants);
+          props.onPlaceSelected(center, restaurants);
         }
       };
 

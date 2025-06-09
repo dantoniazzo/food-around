@@ -17,6 +17,7 @@ import { useViewer } from 'entities/viewer';
 import { getItem, LocalStorageKeys } from 'shared';
 import { userMutationApi } from 'features/user-mutation';
 import Button from '@mui/material/Button';
+import './styles.css';
 
 export const BasicInfo = () => {
   const [selectedRestaurant, setSelectedRestaurant] =
@@ -65,7 +66,7 @@ export const BasicInfo = () => {
 
   return (
     <Dialog onClose={handleClose} open={!!selectedRestaurant}>
-      <DialogTitle textAlign={'center'} fontSize={24}>
+      <DialogTitle fontSize={24}>
         {selectedRestaurant?.name}
         <div
           className="absolute top-6 right-5 cursor-pointer"
@@ -105,12 +106,7 @@ export const BasicInfo = () => {
         </div>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText
-          textAlign={'center'}
-          marginTop={2}
-          marginBottom={4}
-          fontSize={16}
-        >
+        <DialogContentText marginTop={2} marginBottom={4} fontSize={16}>
           {selectedRestaurant?.address}
         </DialogContentText>
         {selectedRestaurant?.phone && (

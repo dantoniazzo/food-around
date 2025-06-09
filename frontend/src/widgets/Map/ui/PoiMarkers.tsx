@@ -1,15 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pin, AdvancedMarker, useMap } from '@vis.gl/react-google-maps';
 import { type Marker, MarkerClusterer } from '@googlemaps/markerclusterer';
-import { Circle } from './Circle';
 import type { Restaurant } from 'entities/restaurant';
 import { openEvent } from 'features/restaurants';
 
 export const PoiMarkers = (props: { pois: Restaurant[] }) => {
   const map = useMap();
-  const [circleCenter, setCircleCenter] = useState<google.maps.LatLng | null>(
-    null
-  );
   const [markers, setMarkers] = useState<{ [key: string]: Marker }>({});
   const clusterer = useRef<MarkerClusterer | null>(null);
 
@@ -47,22 +43,12 @@ export const PoiMarkers = (props: { pois: Restaurant[] }) => {
       if (!map) return;
       if (!ev.latLng) return;
       map.panTo(ev.latLng);
-      setCircleCenter(ev.latLng);
       openEvent(poi);
     },
-    [map, markers]
+    [map]
   );
   return (
     <>
-      <Circle
-        radius={800}
-        center={circleCenter}
-        strokeColor={'#0c4cb3'}
-        strokeOpacity={1}
-        strokeWeight={3}
-        fillColor={'#3b82f6'}
-        fillOpacity={0.3}
-      />
       {props.pois.map((poi: Restaurant) => (
         <AdvancedMarker
           key={poi.id}

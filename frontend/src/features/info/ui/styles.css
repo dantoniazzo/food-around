@@ -1,0 +1,28 @@
+.MuiFormLabel-root {
+  line-height: 1em !important;
+}
+
+.MuiPaper-root {
+  padding: 10px 20px;
+  border-radius: 8px !important;
+  width: 40%;
+  background-color: rgb(1, 1, 23) !important;
+}
+
+@media (max-width: 992px) {
+  .MuiPaper-root {
+    width: 45%;
+  }
+}
+
+@media (max-width: 768px) {
+  .MuiPaper-root {
+    width: 60%;
+  }
+}
+
+@media (max-width: 576px) {
+  .MuiPaper-root {
+    width: 80%;
+  }
+}
