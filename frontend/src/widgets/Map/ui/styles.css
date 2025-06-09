@@ -1,6 +1,7 @@
 mapbox-geocoder {
   pointer-events: auto;
   width: 70% !important;
+  margin-top: 2em;
 }
 
 mapbox-geocoder > div {

@@ -23,6 +23,6 @@ export type Restaurant = {
   coordinates: [number, number];
   address: string;
   openHours?: OpenHours[];
-  phone: string;
+  phone?: string;
   comment?: string;
 };

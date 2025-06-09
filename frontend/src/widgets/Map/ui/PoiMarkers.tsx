@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { Poi } from '../model/google-map.types';
 import { Pin, AdvancedMarker, useMap } from '@vis.gl/react-google-maps';
 import { type Marker, MarkerClusterer } from '@googlemaps/markerclusterer';
 import { Circle } from './Circle';
+import type { Restaurant } from 'entities/restaurant';
 
-export const PoiMarkers = (props: { pois: Poi[] }) => {
+const infowindow = new google.maps.InfoWindow();
+
+export const PoiMarkers = (props: { pois: Restaurant[] }) => {
   const map = useMap();
   const [circleCenter, setCircleCenter] = useState<google.maps.LatLng | null>(
     null
@@ -42,14 +44,30 @@ export const PoiMarkers = (props: { pois: Poi[] }) => {
   };
 
   const handleClick = useCallback(
-    (ev: google.maps.MapMouseEvent) => {
+    (ev: google.maps.MapMouseEvent, poi: Restaurant) => {
       if (!map) return;
       if (!ev.latLng) return;
-      console.log('marker clicked:', ev.latLng.toString());
       map.panTo(ev.latLng);
       setCircleCenter(ev.latLng);
+      const content = document.createElement('div');
+
+      const nameElement = document.createElement('h1');
+
+      nameElement.textContent = poi.name;
+      nameElement.style.fontSize = '16px';
+      nameElement.style.fontWeight = 'bold';
+      content.appendChild(nameElement);
+
+      const placeAddressElement = document.createElement('p');
+
+      placeAddressElement.textContent = poi.address;
+      content.style.color = 'black';
+      content.appendChild(placeAddressElement);
+      const marker = markers[poi.id];
+      infowindow.setContent(content);
+      infowindow.open(map, marker);
     },
-    [map]
+    [map, markers]
   );
   return (
     <>
@@ -62,12 +80,12 @@ export const PoiMarkers = (props: { pois: Poi[] }) => {
         fillColor={'#3b82f6'}
         fillOpacity={0.3}
       />
-      {props.pois.map((poi: Poi) => (
+      {props.pois.map((poi: Restaurant) => (
         <AdvancedMarker
-          key={poi.key}
-          position={poi.location}
-          ref={(marker) => setMarkerRef(marker, poi.key)}
-          onClick={handleClick}
+          key={poi.id}
+          position={{ lat: poi.coordinates[0], lng: poi.coordinates[1] }}
+          ref={(marker) => setMarkerRef(marker, poi.id as string)}
+          onClick={(e) => handleClick(e, poi)}
         >
           <Pin
             background={'#FBBC04'}
