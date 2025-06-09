@@ -8,12 +8,10 @@ import {
   useRestaurantsMarkers,
 } from 'features/restaurants';
 import './styles.css';
-import { MAPBOX_MAP_CONTAINER_ID } from '../lib';
 import Button from '@mui/material/Button';
 import { useViewer } from 'entities/viewer';
 import GoogleIcon from '@mui/icons-material/Google';
 import { Link } from 'react-router-dom';
-import { BasicInfo } from 'features/info/ui/BasicInfo';
 
 export const MapboxMap = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -83,11 +81,7 @@ export const MapboxMap = () => {
         />
       </div>
 
-      <div
-        id={MAPBOX_MAP_CONTAINER_ID}
-        ref={mapContainerRef}
-        className="w-full h-full"
-      />
+      <div ref={mapContainerRef} className="w-full h-full" />
 
       <div className="absolute bottom-5 right-5">
         {' '}
@@ -98,7 +92,6 @@ export const MapboxMap = () => {
           </Button>
         </Link>
       </div>
-      <BasicInfo />
     </>
   );
 };

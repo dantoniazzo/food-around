@@ -3,8 +3,7 @@ import { Pin, AdvancedMarker, useMap } from '@vis.gl/react-google-maps';
 import { type Marker, MarkerClusterer } from '@googlemaps/markerclusterer';
 import { Circle } from './Circle';
 import type { Restaurant } from 'entities/restaurant';
-
-const infowindow = new google.maps.InfoWindow();
+import { openEvent } from 'features/restaurants';
 
 export const PoiMarkers = (props: { pois: Restaurant[] }) => {
   const map = useMap();
@@ -49,23 +48,7 @@ export const PoiMarkers = (props: { pois: Restaurant[] }) => {
       if (!ev.latLng) return;
       map.panTo(ev.latLng);
       setCircleCenter(ev.latLng);
-      const content = document.createElement('div');
-
-      const nameElement = document.createElement('h1');
-
-      nameElement.textContent = poi.name;
-      nameElement.style.fontSize = '16px';
-      nameElement.style.fontWeight = 'bold';
-      content.appendChild(nameElement);
-
-      const placeAddressElement = document.createElement('p');
-
-      placeAddressElement.textContent = poi.address;
-      content.style.color = 'black';
-      content.appendChild(placeAddressElement);
-      const marker = markers[poi.id];
-      infowindow.setContent(content);
-      infowindow.open(map, marker);
+      openEvent(poi);
     },
     [map, markers]
   );

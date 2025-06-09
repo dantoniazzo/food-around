@@ -7,6 +7,8 @@ import { Login } from 'pages/Login';
 import { Signup } from 'pages/Signup';
 import { ProtectedRoute } from 'features/auth/ui/ProtectedRoute';
 import { Home } from 'pages/Home';
+import { BasicInfo } from 'features/info';
+import { APP_ID } from 'app/lib';
 
 const darkTheme = createTheme({
   palette: {
@@ -18,7 +20,7 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <div className="h-screen w-screen">
+      <div id={APP_ID} className="h-screen w-screen">
         <Router>
           <Routes>
             <Route
@@ -36,6 +38,7 @@ function App() {
             <Route path="/:id" element={<Restaurant />} />
           </Routes>
         </Router>
+        <BasicInfo />
       </div>
     </ThemeProvider>
   );
