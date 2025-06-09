@@ -1,1 +1,4 @@
-export * from './Map';
+export * from './MapboxMap';
+export * from './GoogleMap';
+export * from './PoiMarkers';
+export * from './styles.css';

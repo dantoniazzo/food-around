@@ -11,7 +11,7 @@ import {
   useRestaurantsMarkers,
 } from 'features/restaurants';
 import './styles.css';
-import { MAP_CONTAINER_ID } from '../lib';
+import { MAPBOX_MAP_CONTAINER_ID } from '../lib';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -21,13 +21,14 @@ import Button from '@mui/material/Button';
 import GradeIcon from '@mui/icons-material/Grade';
 import TextField from '@mui/material/TextField';
 import { debounce } from 'lodash';
-
 import type { Restaurant } from 'entities/restaurant';
 import { userMutationApi } from 'features/user-mutation';
 import { useViewer } from 'entities/viewer';
 import { getItem, LocalStorageKeys } from 'shared';
+import GoogleIcon from '@mui/icons-material/Google';
+import { Link } from 'react-router-dom';
 
-export const Map = () => {
+export const MapboxMap = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<MapType | undefined>(undefined);
   const { me } = useViewer();
@@ -133,7 +134,7 @@ export const Map = () => {
       </div>
 
       <div
-        id={MAP_CONTAINER_ID}
+        id={MAPBOX_MAP_CONTAINER_ID}
         ref={mapContainerRef}
         className="w-full h-full"
       />
@@ -229,6 +230,15 @@ export const Map = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <div className="absolute bottom-5 right-5">
+        {' '}
+        <Link to={'/google'}>
+          <Button variant="contained" color="secondary">
+            <GoogleIcon />
+            &nbsp; Switch to Google
+          </Button>
+        </Link>
+      </div>
     </>
   );
 };

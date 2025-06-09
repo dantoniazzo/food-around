@@ -5,4 +5,7 @@ export const env = {
   mapbox: {
     accessToken: import.meta.env.VITE_MAPBOX_TOKEN,
   },
+  googleMaps: {
+    apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+  },
 };

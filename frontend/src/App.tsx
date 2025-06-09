@@ -1,4 +1,4 @@
-import { Map } from 'widgets';
+import { GoogleMap, MapboxMap } from 'widgets';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { Restaurant } from 'pages/Restaurant';
 import { Login } from 'pages/Login';
 import { Signup } from 'pages/Signup';
 import { ProtectedRoute } from 'features/auth/ui/ProtectedRoute';
+import { Home } from 'pages/Home';
 
 const darkTheme = createTheme({
   palette: {
@@ -24,10 +25,12 @@ function App() {
               path="/"
               element={
                 <ProtectedRoute>
-                  <Map />
+                  <Home />
                 </ProtectedRoute>
               }
             />
+            <Route path="/mapbox" element={<MapboxMap />} />
+            <Route path="/google" element={<GoogleMap />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/:id" element={<Restaurant />} />
