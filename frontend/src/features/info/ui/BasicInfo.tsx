@@ -127,7 +127,6 @@ export const BasicInfo = () => {
             <DialogContentText
               width={'fit-content'}
               paddingTop={'4px'}
-              borderBottom={'1px solid rgba(186, 186, 186, 0.555)'}
               fontSize={14}
             >
               {formatOpenHours(openHours)}

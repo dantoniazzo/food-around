@@ -8,12 +8,20 @@ export enum RestaurantMakis {
 
 export interface DayTime {
   day: number;
-  time: 'string';
+  time: string;
 }
 
 export interface OpenHours {
-  close: DayTime;
+  close?: DayTime;
   open: DayTime;
+}
+
+export interface RestaurantReview {
+  author: string;
+  profilePhoto: string;
+  rating?: number;
+  date: string;
+  text: string;
 }
 
 export type Restaurant = {
@@ -25,4 +33,13 @@ export type Restaurant = {
   openHours?: OpenHours[];
   phone?: string;
   comment?: string;
+  status?: string;
+  icon?: string;
+  currentlyOpen?: boolean;
+  photos?: string[];
+  priceLvl?: number;
+  rating?: number;
+  website?: string;
+  reviews?: RestaurantReview[];
+  totalRatings?: number;
 };
