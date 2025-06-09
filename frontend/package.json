@@ -18,6 +18,7 @@
     "@mapbox/search-js-react": "^1.1.0",
     "@mui/icons-material": "^7.1.1",
     "@mui/material": "^7.1.1",
+    "@mui/x-data-grid": "^8.5.1",
     "@reduxjs/toolkit": "^2.8.2",
     "@tailwindcss/vite": "^4.1.8",
     "@vis.gl/react-google-maps": "latest",

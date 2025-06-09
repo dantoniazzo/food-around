@@ -7,19 +7,16 @@ import { useParams } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import { formatOpenHours } from 'features/restaurants';
 import GradeIcon from '@mui/icons-material/Grade';
+import { MapLoader } from 'widgets';
 
 export const Restaurant = () => {
   const [restaurant, setRestaurant] = useState<RestaurantType | null>(null);
-  console.log('Restaurant: ', restaurant);
   const params = useParams();
   useEffect(() => {
     const id = params.id;
-    if (!id) return;
-    if (!window.map) {
-      window.map = new google.maps.Map(
-        document.getElementById('map') as HTMLElement
-      );
-    }
+    const { map } = window;
+    console.log('Map: ', map);
+    if (!id || !map) return;
     const request = {
       placeId: id,
       fields: [
@@ -40,8 +37,7 @@ export const Restaurant = () => {
         'price_level',
       ],
     };
-    const { map } = window;
-    if (!map) return;
+
     const service = new google.maps.places.PlacesService(map);
     service.getDetails(request, (place, status) => {
       if (
@@ -84,7 +80,7 @@ export const Restaurant = () => {
   }, [params.id]);
   return (
     <div className="w-full h-full">
-      <div id="map" />
+      <MapLoader />
       <Container className="py-10 flex flex-col gap-12">
         <h1 className="text-white text-4xl flex items-center gap-4 font-bold">
           <img className="w-15 h-15 object-contain" src={restaurant?.icon} />

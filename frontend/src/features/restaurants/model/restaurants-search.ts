@@ -59,19 +59,49 @@ export const useMapboxRestaurantsSearch = () => {
 };
 
 export const findGoogleRestaurantsFromCoordinates = (
-  map: google.maps.Map,
   location: google.maps.LatLngLiteral,
-  callback: (center: google.maps.LatLng, restaurants: Restaurant[]) => void
+  callback: (center: google.maps.LatLng, restaurants: Restaurant[]) => void,
+  options?: {
+    radius?: number;
+    bounds?: google.maps.LatLngBounds;
+  }
 ) => {
   const coordinates = { lat: location?.lat, lng: location?.lng };
   const center = new google.maps.LatLng(coordinates.lat, coordinates.lng);
-  map.setCenter(center);
-  map.setZoom(15);
-  const request = {
-    location: center,
-    radius: RADIUS,
+  const { map } = window;
+  if (!map) return;
+  // If map set from MapLoader, won't have these properties
+  // Don't need them for restaurant and table pages
+  if (map.setCenter && map.setZoom) {
+    map.setCenter(center);
+    map.setZoom(15);
+  }
+
+  const request: {
+    type: 'restaurant';
+    location?: google.maps.LatLng;
+    radius?: number;
+    bounds?: google.maps.LatLngBounds;
+    fields?: string[];
+  } = {
     type: 'restaurant',
   };
+  if (options?.bounds) {
+    const bounds: google.maps.LatLngBounds = new google.maps.LatLngBounds(
+      options.bounds
+    );
+    request.bounds = bounds;
+  } else {
+    request.location = center;
+    request.radius = options?.radius || RADIUS;
+  }
+  request.fields = [
+    'rating',
+    'formatted_phone_number',
+    'website',
+    'user_ratings_total',
+    'price_level',
+  ];
 
   const searchCallback = (
     results: google.maps.places.PlaceResult[] | null,
@@ -93,6 +123,9 @@ export const findGoogleRestaurantsFromCoordinates = (
             coordinates: [location.lat(), location.lng()] as [number, number],
             address: result.vicinity,
             id: result.place_id,
+            rating: result.rating,
+            totalRatings: result.user_ratings_total,
+            status: result.business_status,
           };
         })
         .filter((restaurant) => !!restaurant);

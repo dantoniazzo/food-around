@@ -37,7 +37,7 @@ export const GoogleMap = () => {
         onClick={(e) => {
           const latLng = e.detail.latLng;
           if (!latLng) return;
-          findGoogleRestaurantsFromCoordinates(e.map, latLng, mainCallback);
+          findGoogleRestaurantsFromCoordinates(latLng, mainCallback);
         }}
       >
         {locations && <PoiMarkers pois={locations} />}
