@@ -1,1 +1,6 @@
 @import 'tailwindcss';
+
+@theme {
+  --breakpoint-xs: 304px;
+  --color-green-100: #2af50f;
+}

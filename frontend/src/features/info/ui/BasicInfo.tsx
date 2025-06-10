@@ -1,24 +1,24 @@
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogActions from '@mui/material/DialogActions';
-import GradeIcon from '@mui/icons-material/Grade';
-import TextField from '@mui/material/TextField';
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
+import GradeIcon from "@mui/icons-material/Grade";
+import TextField from "@mui/material/TextField";
 import {
   formatOpenHours,
   openEventListener,
   removeEventListener,
-} from 'features/restaurants';
-import { useEffect, useMemo, useState } from 'react';
-import type { Restaurant } from 'entities/restaurant';
-import { debounce } from 'lodash';
-import { useViewer } from 'entities/viewer';
-import { getItem, LocalStorageKeys } from 'shared';
-import { userMutationApi } from 'features/user-mutation';
-import Button from '@mui/material/Button';
-import { useNavigate } from 'react-router-dom';
-import './styles.css';
+} from "features/restaurants";
+import { useEffect, useMemo, useState } from "react";
+import type { Restaurant } from "entities/restaurant";
+import { debounce } from "lodash";
+import { useViewer } from "entities/viewer";
+import { getItem, LocalStorageKeys } from "shared";
+import { userMutationApi } from "features/user-mutation";
+import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
+import "./styles.css";
 
 export const BasicInfo = () => {
   const [selectedRestaurant, setSelectedRestaurant] =
@@ -72,7 +72,8 @@ export const BasicInfo = () => {
         {selectedRestaurant?.name}
         <div
           className="absolute top-6 right-5 cursor-pointer"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             const viewer = me;
             if (!viewer || !selectedRestaurant) return;
             const favorites = viewer.favorites;
@@ -102,7 +103,7 @@ export const BasicInfo = () => {
           }}
         >
           <GradeIcon
-            color={selectedFavorite ? 'warning' : 'inherit'}
+            color={selectedFavorite ? "warning" : "inherit"}
             fontSize="large"
           />
         </div>
@@ -117,7 +118,7 @@ export const BasicInfo = () => {
           </DialogContentText>
         )}
         {selectedRestaurant?.openHours && (
-          <DialogContentText fontWeight={'bold'} marginY={1} fontSize={14}>
+          <DialogContentText fontWeight={"bold"} marginY={1} fontSize={14}>
             Open hours:
           </DialogContentText>
         )}
@@ -125,8 +126,8 @@ export const BasicInfo = () => {
         {selectedRestaurant?.openHours?.map((openHours) => {
           return (
             <DialogContentText
-              width={'fit-content'}
-              paddingTop={'4px'}
+              width={"fit-content"}
+              paddingTop={"4px"}
               fontSize={14}
             >
               {formatOpenHours(openHours)}

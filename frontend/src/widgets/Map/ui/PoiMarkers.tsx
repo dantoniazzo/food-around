@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Pin, AdvancedMarker, useMap } from '@vis.gl/react-google-maps';
-import { type Marker, MarkerClusterer } from '@googlemaps/markerclusterer';
-import type { Restaurant } from 'entities/restaurant';
-import { openEvent } from 'features/restaurants';
+import { useCallback, useEffect, useRef } from "react";
+import { Pin, AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
+import { type Marker, MarkerClusterer } from "@googlemaps/markerclusterer";
+import type { Restaurant } from "entities/restaurant";
+import { openEvent } from "features/restaurants";
 
-export const PoiMarkers = (props: { pois: Restaurant[] }) => {
+export const PoiMarkers = (props: { pois: Restaurant[]; color?: string }) => {
   const map = useMap();
-  const [markers, setMarkers] = useState<{ [key: string]: Marker }>({});
+  const markers = useRef<{ [key: string]: Marker }>({});
   const clusterer = useRef<MarkerClusterer | null>(null);
 
   // Initialize MarkerClusterer, if the map has changed
@@ -17,25 +17,19 @@ export const PoiMarkers = (props: { pois: Restaurant[] }) => {
     }
   }, [map]);
 
-  // Update markers, if the markers array has changed
-  useEffect(() => {
-    clusterer.current?.clearMarkers();
-    clusterer.current?.addMarkers(Object.values(markers));
-  }, [markers]);
-
   const setMarkerRef = (marker: Marker | null, key: string) => {
-    if (marker && markers[key]) return;
-    if (!marker && !markers[key]) return;
-
-    setMarkers((prev) => {
-      if (marker) {
-        return { ...prev, [key]: marker };
-      } else {
-        const newMarkers = { ...prev };
-        delete newMarkers[key];
-        return newMarkers;
-      }
-    });
+    const currentMarkers = markers.current;
+    if (marker && currentMarkers[key]) return;
+    if (!marker && !currentMarkers[key]) return;
+    if (marker) {
+      markers.current = { ...currentMarkers, [key]: marker };
+    } else {
+      const newMarkers = { ...currentMarkers };
+      delete newMarkers[key];
+      markers.current = newMarkers;
+    }
+    clusterer.current?.clearMarkers();
+    clusterer.current?.addMarkers(Object.values(markers.current));
   };
 
   const handleClick = useCallback(
@@ -57,9 +51,9 @@ export const PoiMarkers = (props: { pois: Restaurant[] }) => {
           onClick={(e) => handleClick(e, poi)}
         >
           <Pin
-            background={'#FBBC04'}
-            glyphColor={'#000'}
-            borderColor={'#000'}
+            background={props.color ?? "#FBBC04"}
+            glyphColor={"#000"}
+            borderColor={"#000"}
           />
         </AdvancedMarker>
       ))}
