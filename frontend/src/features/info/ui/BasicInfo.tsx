@@ -75,6 +75,7 @@ export const BasicInfo = () => {
           onClick={(e) => {
             e.stopPropagation();
             const viewer = me;
+
             if (!viewer || !selectedRestaurant) return;
             const favorites = viewer.favorites;
             let newFavorites = [];
@@ -112,14 +113,9 @@ export const BasicInfo = () => {
         <DialogContentText marginTop={2} marginBottom={4} fontSize={16}>
           {selectedRestaurant?.address}
         </DialogContentText>
-        {selectedRestaurant?.phone && (
+        {selectedRestaurant?.rating && (
           <DialogContentText marginY={1} fontSize={14}>
-            <b>Phone:</b> {selectedRestaurant?.phone}
-          </DialogContentText>
-        )}
-        {selectedRestaurant?.openHours && (
-          <DialogContentText fontWeight={"bold"} marginY={1} fontSize={14}>
-            Open hours:
+            <b>Rating:</b> {selectedRestaurant?.rating} / 5
           </DialogContentText>
         )}
 

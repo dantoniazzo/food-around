@@ -1,13 +1,18 @@
 import {
   RestaurantMakis,
   type Restaurant as RestaurantType,
-} from 'entities/restaurant';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import Container from '@mui/material/Container';
-import { formatOpenHours } from 'features/restaurants';
-import GradeIcon from '@mui/icons-material/Grade';
-import { MapLoader } from 'widgets';
+} from "entities/restaurant";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import Container from "@mui/material/Container";
+import { formatOpenHours } from "features/restaurants";
+import GradeIcon from "@mui/icons-material/Grade";
+import { MapLoader } from "widgets";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 export const Restaurant = () => {
   const [restaurant, setRestaurant] = useState<RestaurantType | null>(null);
@@ -15,26 +20,25 @@ export const Restaurant = () => {
   useEffect(() => {
     const id = params.id;
     const { map } = window;
-    console.log('Map: ', map);
     if (!id || !map) return;
     const request = {
       placeId: id,
       fields: [
-        'name',
-        'rating',
-        'formatted_phone_number',
-        'opening_hours',
-        'formatted_address',
-        'place_id',
-        'geometry',
-        'business_status',
-        'icon',
-        'photo',
-        'url',
-        'website',
-        'reviews',
-        'user_ratings_total',
-        'price_level',
+        "name",
+        "rating",
+        "formatted_phone_number",
+        "opening_hours",
+        "formatted_address",
+        "place_id",
+        "geometry",
+        "business_status",
+        "icon",
+        "photo",
+        "url",
+        "website",
+        "reviews",
+        "user_ratings_total",
+        "price_level",
       ],
     };
 
@@ -47,14 +51,14 @@ export const Restaurant = () => {
         place.geometry.location
       ) {
         setRestaurant({
-          id: place.place_id?.toString() || '',
+          id: place.place_id?.toString() || "",
           maki: RestaurantMakis.RESTAURANT,
-          name: place.name || '',
+          name: place.name || "",
           coordinates: [
             place.geometry.location.lat(),
             place.geometry.location.lng(),
           ],
-          address: place.formatted_address || '',
+          address: place.formatted_address || "",
           openHours: place.opening_hours?.periods,
           phone: place.formatted_phone_number,
           status: place.business_status,
@@ -88,29 +92,64 @@ export const Restaurant = () => {
         </h1>
         <div className="flex items-center gap-2 overflow-auto">
           {restaurant?.photos?.map((img) => {
-            return <img src={img} className="w-100 h-70 object-contain" />;
+            return <img src={img} className="w-100 h-70 object-cover" />;
           })}
         </div>
-        {restaurant?.address && <h2>{restaurant.address}</h2>}
-        {restaurant?.status && <h3>{restaurant.status}</h3>}
-        {restaurant?.currentlyOpen === true ? (
-          <h3>Open</h3>
-        ) : restaurant?.currentlyOpen === false ? (
-          <h3>Closed</h3>
-        ) : null}
-        {restaurant?.openHours && (
-          <div>
-            {restaurant.openHours.map((openHours) => {
-              return <h4 className="">{formatOpenHours(openHours)}</h4>;
-            })}
-          </div>
-        )}
+        <Card sx={{ width: "100%" }}>
+          <CardContent>
+            {restaurant?.address && (
+              <Typography
+                gutterBottom
+                sx={{ color: "text.secondary", fontSize: 14 }}
+              >
+                {restaurant.address}
+              </Typography>
+            )}
+            {restaurant?.rating && (
+              <Typography variant="h5" component="div">
+                {restaurant.rating} / 5
+              </Typography>
+            )}
+            {restaurant?.totalRatings && (
+              <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
+                Total ratings: {restaurant.totalRatings}
+              </Typography>
+            )}
+            {restaurant?.openHours && (
+              <div>
+                {restaurant.openHours.map((openHours) => {
+                  return (
+                    <Typography variant="body2">
+                      {formatOpenHours(openHours)}
+                    </Typography>
+                  );
+                })}
+              </div>
+            )}
+            {restaurant?.status && (
+              <Typography marginTop={3} variant="body2">
+                {restaurant.status}
+              </Typography>
+            )}
+          </CardContent>
+          {restaurant?.website && (
+            <CardActions>
+              <a
+                className="text-blue-500"
+                target="_blank"
+                rel={"noopener noreferrer"}
+                href={restaurant.website}
+              >
+                {" "}
+                <Button size="small">Visit website</Button>
+              </a>
+            </CardActions>
+          )}
+        </Card>
+
         {restaurant?.phone && <h5>{restaurant.phone}</h5>}
         {restaurant?.priceLvl && <h5>Price level: {restaurant.priceLvl}</h5>}
-        {restaurant?.rating && <h5>Rating: {restaurant.rating} / 5</h5>}
-        {restaurant?.totalRatings && (
-          <h5>Total ratings: {restaurant.totalRatings}</h5>
-        )}
+
         {restaurant?.reviews && (
           <div className="flex flex-col gap-4">
             {restaurant.reviews.map((review) => {
@@ -126,7 +165,7 @@ export const Restaurant = () => {
                             return (
                               <GradeIcon
                                 color={
-                                  review.rating < i ? 'inherit' : 'warning'
+                                  review.rating < i ? "inherit" : "warning"
                                 }
                                 fontSize="large"
                               />
@@ -143,19 +182,6 @@ export const Restaurant = () => {
               );
             })}
           </div>
-        )}
-        {restaurant?.website && (
-          <h5>
-            Website:{' '}
-            <a
-              className="text-blue-500"
-              target="_blank"
-              rel={'noopener noreferrer'}
-              href={restaurant.website}
-            >
-              {restaurant.website}
-            </a>
-          </h5>
         )}
       </Container>
     </div>
