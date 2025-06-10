@@ -19,7 +19,7 @@ export const GoogleMap = () => {
   const { me } = useViewer();
 
   useEffect(() => {
-    if (!window.map) window.map = map;
+    if (!window.map && map?.setCenter) window.map = map;
   }, [map]);
 
   const mainCallback = (
@@ -70,12 +70,17 @@ export const GoogleMap = () => {
           fillOpacity={0.3}
         />
       </Map>
-      <div className="absolute bottom-5 left-5">
+      <div className="absolute bottom-5 left-5 flex items-center gap-2">
         {" "}
         <Link to={"/mapbox"}>
           <Button variant="contained" color="primary">
             <MapIcon />
             &nbsp; Switch to Mapbox
+          </Button>
+        </Link>
+        <Link to={"/table"}>
+          <Button variant="outlined" color="warning">
+            Switch to Table
           </Button>
         </Link>
       </div>

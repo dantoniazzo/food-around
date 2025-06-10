@@ -3,7 +3,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
-import GradeIcon from "@mui/icons-material/Grade";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import TextField from "@mui/material/TextField";
 import {
   formatOpenHours,
@@ -103,8 +103,8 @@ export const BasicInfo = () => {
             handleUpdateUser(updatedViewer);
           }}
         >
-          <GradeIcon
-            color={selectedFavorite ? "warning" : "inherit"}
+          <FavoriteIcon
+            color={selectedFavorite ? "error" : "inherit"}
             fontSize="large"
           />
         </div>

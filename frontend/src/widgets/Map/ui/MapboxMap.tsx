@@ -1,17 +1,17 @@
-import { useRef, useEffect, useState } from 'react';
-import { Geocoder } from '@mapbox/search-js-react';
-import mapboxgl, { Map as MapType } from 'mapbox-gl';
-import { env } from 'app/config';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import { useRef, useEffect, useState } from "react";
+import { Geocoder } from "@mapbox/search-js-react";
+import mapboxgl, { Map as MapType } from "mapbox-gl";
+import { env } from "app/config";
+import "mapbox-gl/dist/mapbox-gl.css";
 import {
   useMapboxRestaurantsSearch,
   useRestaurantsMarkers,
-} from 'features/restaurants';
-import './styles.css';
-import Button from '@mui/material/Button';
-import { useViewer } from 'entities/viewer';
-import GoogleIcon from '@mui/icons-material/Google';
-import { Link } from 'react-router-dom';
+} from "features/restaurants";
+import "./styles.css";
+import Button from "@mui/material/Button";
+import { useViewer } from "entities/viewer";
+import GoogleIcon from "@mui/icons-material/Google";
+import { Link } from "react-router-dom";
 
 export const MapboxMap = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -21,7 +21,7 @@ export const MapboxMap = () => {
   const { drawRestaurantMarkers } = useRestaurantsMarkers();
   const [, setMapLoaded] = useState(false);
 
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
     mapboxgl.accessToken = env.mapbox.accessToken;
@@ -35,10 +35,10 @@ export const MapboxMap = () => {
     });
     const map = mapInstanceRef.current;
     if (!map) return;
-    mapInstanceRef.current.on('load', () => {
+    mapInstanceRef.current.on("load", () => {
       setMapLoaded(true);
     });
-    mapInstanceRef.current?.on('click', (e) => {
+    mapInstanceRef.current?.on("click", (e) => {
       mapInstanceRef.current?.flyTo({
         center: e.lngLat,
       });
@@ -83,12 +83,17 @@ export const MapboxMap = () => {
 
       <div ref={mapContainerRef} className="w-full h-full" />
 
-      <div className="absolute bottom-5 right-5">
-        {' '}
-        <Link to={'/google'}>
+      <div className="absolute bottom-5 right-5 flex items-center gap-2">
+        {" "}
+        <Link to={"/google"}>
           <Button variant="contained" color="secondary">
             <GoogleIcon />
             &nbsp; Switch to Google Maps
+          </Button>
+        </Link>
+        <Link to={"/table"}>
+          <Button variant="outlined" color="warning">
+            Switch to Table
           </Button>
         </Link>
       </div>
