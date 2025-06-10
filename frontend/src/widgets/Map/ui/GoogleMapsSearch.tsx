@@ -1,7 +1,7 @@
-import { usePlacesWidget } from 'react-google-autocomplete';
-import { env } from 'app/config';
-import { type Restaurant } from 'entities/restaurant';
-import { findGoogleRestaurantsFromCoordinates } from 'features/restaurants';
+import { usePlacesWidget } from "react-google-autocomplete";
+import { env } from "app/config";
+import { type Restaurant } from "entities/restaurant";
+import { findGoogleRestaurantsFromCoordinates } from "features/restaurants";
 
 interface GoogleSearchProps {
   onPlaceSelected: (
@@ -14,9 +14,10 @@ export const GoogleMapsSearch = (props: GoogleSearchProps) => {
   const { ref } = usePlacesWidget({
     apiKey: env.googleMaps.apiKey,
     options: {
-      fields: ['geometry'],
+      fields: ["geometry"],
     },
     onPlaceSelected: (place) => {
+      if (!place) return;
       const { map } = window;
       const location = place.geometry?.location;
       if (!location || !map) return;

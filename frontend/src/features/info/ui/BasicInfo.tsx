@@ -4,6 +4,9 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import HotelClassIcon from "@mui/icons-material/HotelClass";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import TextField from "@mui/material/TextField";
 import {
   formatOpenHours,
@@ -23,6 +26,7 @@ import "./styles.css";
 export const BasicInfo = () => {
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<Restaurant | null>(null);
+  console.log("Selected Restaurant:", selectedRestaurant);
   const { me } = useViewer();
   const navigate = useNavigate();
   const [handleUpdateUser] = userMutationApi.endpoints.updateUser.useMutation();
@@ -103,19 +107,35 @@ export const BasicInfo = () => {
             handleUpdateUser(updatedViewer);
           }}
         >
-          <FavoriteIcon
-            color={selectedFavorite ? "error" : "inherit"}
-            fontSize="large"
-          />
+          {!selectedFavorite && (
+            <FavoriteBorderIcon fontSize="large" color="inherit" />
+          )}
+          {selectedFavorite && <FavoriteIcon fontSize="large" color="error" />}
         </div>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText marginTop={2} marginBottom={4} fontSize={16}>
+        <DialogContentText marginTop={1} marginBottom={2} fontSize={16}>
           {selectedRestaurant?.address}
         </DialogContentText>
         {selectedRestaurant?.rating && (
-          <DialogContentText marginY={1} fontSize={14}>
-            <b>Rating:</b> {selectedRestaurant?.rating} / 5
+          <DialogContentText
+            className="flex items-center gap-2"
+            variant="h6"
+            fontSize={16}
+          >
+            <HotelClassIcon /> {selectedRestaurant?.rating} / 5{" "}
+            {selectedRestaurant.totalRatings
+              ? `(${selectedRestaurant.totalRatings} ratings)`
+              : ""}
+          </DialogContentText>
+        )}
+        {selectedRestaurant?.priceLvl && (
+          <DialogContentText
+            className="flex items-center gap-2"
+            variant="h6"
+            fontSize={16}
+          >
+            <AttachMoneyIcon /> {selectedRestaurant?.priceLvl} / 4
           </DialogContentText>
         )}
 

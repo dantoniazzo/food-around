@@ -19,7 +19,7 @@ export const GoogleMap = () => {
   const { me } = useViewer();
 
   useEffect(() => {
-    if (!window.map && map?.setCenter) window.map = map;
+    window.map = map;
   }, [map]);
 
   const mainCallback = (

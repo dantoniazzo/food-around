@@ -1,10 +1,10 @@
-import { type Restaurant, RestaurantMakis } from 'entities/restaurant';
-import { useSearchBoxApi } from 'features/search';
-import type { Coordinates } from 'shared';
-import { useRestaurantsMarkers } from './restaurants-markers';
-import { Map } from 'mapbox-gl';
-import { useViewer } from 'entities/viewer';
-import { RADIUS } from 'widgets/Map';
+import { type Restaurant, RestaurantMakis } from "entities/restaurant";
+import { useSearchBoxApi } from "features/search";
+import type { Coordinates } from "shared";
+import { useRestaurantsMarkers } from "./restaurants-markers";
+import { Map } from "mapbox-gl";
+import { useViewer } from "entities/viewer";
+import { RADIUS } from "widgets/Map";
 
 export interface SearchArgs {
   map: Map;
@@ -24,7 +24,7 @@ export const useMapboxRestaurantsSearch = () => {
 
   const findRestaurants = async (args: SearchArgs): Promise<Restaurant[]> => {
     const { lat, lng } = args.coordinates;
-    const searchResult = await searchApi.category('food_and_drink', {
+    const searchResult = await searchApi.category("food_and_drink", {
       bbox: args.options?.bbox,
       proximity: {
         lat,
@@ -41,7 +41,7 @@ export const useMapboxRestaurantsSearch = () => {
       })
       .map((feature) => {
         return {
-          id: feature.properties.mapbox_id || '',
+          id: feature.properties.mapbox_id || "",
           name: feature.properties.name,
           coordinates: feature.geometry.coordinates as [number, number],
           maki: feature.properties.maki as RestaurantMakis,
@@ -78,13 +78,13 @@ export const findGoogleRestaurantsFromCoordinates = (
   }
 
   const request: {
-    type: 'restaurant';
+    type: "restaurant";
     location?: google.maps.LatLng;
     radius?: number;
     bounds?: google.maps.LatLngBounds;
     fields?: string[];
   } = {
-    type: 'restaurant',
+    type: "restaurant",
   };
   if (options?.bounds) {
     const bounds: google.maps.LatLngBounds = new google.maps.LatLngBounds(
@@ -96,11 +96,11 @@ export const findGoogleRestaurantsFromCoordinates = (
     request.radius = options?.radius || RADIUS;
   }
   request.fields = [
-    'rating',
-    'formatted_phone_number',
-    'website',
-    'user_ratings_total',
-    'price_level',
+    "rating",
+    "formatted_phone_number",
+    "website",
+    "user_ratings_total",
+    "price_level",
   ];
 
   const searchCallback = (
